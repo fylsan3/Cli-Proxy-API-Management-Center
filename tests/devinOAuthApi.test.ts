@@ -10,14 +10,16 @@ describe('Devin Management OAuth v8 contract', () => {
       url: 'https://app.devin.ai/auth/cli/continue',
       state: 'test-state',
     };
-    const get = spyOn(apiClient, 'get').mockResolvedValue(response);
+    const post = spyOn(apiClient, 'post').mockResolvedValue(response);
     try {
       expect(await oauthApi.startAuth(provider)).toEqual(response);
-      expect(get).toHaveBeenCalledWith('/oauth/auth-url', {
-        params: { provider: 'devin', is_webui: true },
-      });
+      expect(post).toHaveBeenCalledWith(
+        '/oauth/auth-url',
+        { provider: 'devin', is_webui: true },
+        undefined
+      );
     } finally {
-      get.mockRestore();
+      post.mockRestore();
     }
   });
 
@@ -64,11 +66,12 @@ describe('Devin Management OAuth v8 contract', () => {
     const post = spyOn(apiClient, 'post').mockResolvedValue({});
     const remove = spyOn(apiClient, 'delete').mockResolvedValue({});
     try {
-      await oauthApi.startAuth('devin', signal);
-      expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-        params: { provider: 'devin', is_webui: true },
-        signal,
-      });
+      await oauthApi.startAuth('devin', undefined, signal);
+      expect(post).toHaveBeenLastCalledWith(
+        '/oauth/auth-url',
+        { provider: 'devin', is_webui: true },
+        { signal }
+      );
       await oauthApi.getAuthStatus('test-state', signal);
       expect(get).toHaveBeenLastCalledWith('/oauth/status', {
         params: { state: 'test-state' },

@@ -39,6 +39,11 @@ export interface OAuthFlowDialogProps {
   /** 赞助商：品牌蓝主按钮 + 提示行里的注册链接。 */
   sponsor?: { url: string; label: string };
   onStart: () => void;
+  /** 二开：会话代理草稿（非必填，留空 = 全程直连）。 */
+  proxy: string;
+  onProxyChange: (value: string) => void;
+  /** 二开：成功页「再登录一个账号」→ 回到填代理的初始页，而不是直接开始。 */
+  onLoginAnother: () => void;
   onCancel: () => void;
   onCallbackChange: (value: string) => void;
   onCallbackSubmit: () => void;
@@ -104,11 +109,20 @@ function FlowBody(props: OAuthFlowDialogProps & { view: Exclude<FlowView, 'succe
             {text('oauth_status_error')} {state.error || ''}
           </div>
         )}
-        <div>
-          <button type="button" className={styles.primary} onClick={onStart}>
-            {view === 'failed' ? t('auth_login.restart_login') : text('oauth_button')}
-          </button>
-        </div>
+        <form
+          className={styles.stack}
+          onSubmit={(event) => {
+            event.preventDefault();
+            onStart();
+          }}
+        >
+          <ProxyField value={props.proxy} onChange={props.onProxyChange} />
+          <div>
+            <button type="submit" className={styles.primary}>
+              {view === 'failed' ? t('auth_login.restart_login') : text('oauth_button')}
+            </button>
+          </div>
+        </form>
       </div>
     );
   }
@@ -126,6 +140,11 @@ function FlowBody(props: OAuthFlowDialogProps & { view: Exclude<FlowView, 'succe
           {t('auth_login.devin_oauth_cancel_error')} {state.cancelError}
         </div>
       )}
+      <p className={styles.stepHint}>
+        {state.proxyUrl
+          ? t('auth_login.proxy_in_use', { proxy: state.proxyUrl })
+          : t('auth_login.proxy_direct')}
+      </p>
       <ol className={styles.steps}>
         <OpenStep {...props} />
         {state.userCode && (
@@ -144,6 +163,39 @@ function FlowBody(props: OAuthFlowDialogProps & { view: Exclude<FlowView, 'succe
         )}
         {props.supportsCallback && <CallbackStep {...props} />}
       </ol>
+    </div>
+  );
+}
+
+/**
+ * 二开：会话代理输入框。非必填、不做校验；留空时请求体不带 proxy_url（全程直连）。
+ * 填了则 授权链接生成 → 兑换 → 后续调用 → 刷新 全程走这条代理（后端写进凭证的 proxy-url）。
+ */
+function ProxyField({ value, onChange }: { value: string; onChange: (value: string) => void }) {
+  const { t } = useTranslation();
+  const inputId = useId();
+  const hintId = useId();
+  return (
+    <div className={styles.proxyField}>
+      <div className={styles.stepHead}>
+        <label className={styles.stepTitle} htmlFor={inputId}>
+          {t('auth_login.proxy_label')}
+        </label>
+        <span className={styles.optional}>{t('auth_login.optional_step')}</span>
+      </div>
+      <input
+        id={inputId}
+        className="input"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={t('auth_login.proxy_placeholder')}
+        autoComplete="off"
+        spellCheck={false}
+        aria-describedby={hintId}
+      />
+      <p className={styles.stepHint} id={hintId}>
+        {t('auth_login.proxy_hint')}
+      </p>
     </div>
   );
 }
@@ -346,7 +398,7 @@ function FlowStatusBar({ providerId, state, text, onStart, onCancel }: OAuthFlow
   );
 }
 
-function SuccessView({ text, onStart, onViewAuthFiles }: OAuthFlowDialogProps) {
+function SuccessView({ text, onLoginAnother, onViewAuthFiles }: OAuthFlowDialogProps) {
   const { t } = useTranslation();
   return (
     <div className={styles.result} role="status">
@@ -360,7 +412,7 @@ function SuccessView({ text, onStart, onViewAuthFiles }: OAuthFlowDialogProps) {
         <button type="button" className={styles.secondary} onClick={onViewAuthFiles}>
           {t('auth_login.view_auth_files')}
         </button>
-        <button type="button" className={styles.primary} onClick={onStart}>
+        <button type="button" className={styles.primary} onClick={onLoginAnother}>
           {t('auth_login.login_another_account')}
         </button>
       </div>

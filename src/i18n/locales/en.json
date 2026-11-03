@@ -58,7 +58,7 @@
   },
   "title": {
     "login": "CLI Proxy API Management Center",
-    "abbr": "CPAMC"
+    "abbr": "CPA"
   },
   "splash": {
     "title": "CLI Proxy API",
@@ -111,7 +111,7 @@
     "plugin_store": "Plugin Store",
     "config_management": "Config Panel",
     "logs": "Logs Viewer",
-    "system_info": "Management Center Info"
+    "system_info": "Model Info"
   },
   "nav_groups": {
     "operate": "Operate",
@@ -132,7 +132,7 @@
     "plugin_store": "Discover & install plugins",
     "logs": "Request tracing",
     "config_management": "Gateway configuration",
-    "system_info": "Runtime & diagnostics"
+    "system_info": "Available models"
   },
   "dashboard": {
     "hero_verdict_good": "All systems steady",
@@ -203,7 +203,7 @@
     "cta_config_desc": "Tune routing, retries, logging, and access.",
     "cta_quota_desc": "Check remaining quota per credential.",
     "cta_logs_desc": "Tail requests and download error reports.",
-    "cta_system_desc": "Version details and management center info.",
+    "cta_system_desc": "View the list of available models.",
     "window_m": "{{minutes}}m",
     "window_h": "{{hours}}h",
     "window_hm": "{{hours}}h {{minutes}}m"
@@ -976,7 +976,12 @@
     "restart_login": "Start over",
     "success_saved_hint": "The credential is saved — manage it in Auth Files.",
     "sign_up_prompt": "No account yet?",
-    "copied": "Copied"
+    "copied": "Copied",
+    "proxy_label": "Session proxy",
+    "proxy_placeholder": "socks5h://host:port (optional; leave empty for direct connection)",
+    "proxy_hint": "If set, authorization, token exchange, later requests and refreshes all use this proxy; if empty, everything connects directly. Avoid using a proxy in the browser while leaving this empty.",
+    "proxy_in_use": "This login uses proxy end-to-end: {{proxy}}",
+    "proxy_direct": "No proxy for this login: direct connection end-to-end"
   },
   "stats": {
     "success": "Success",
@@ -1894,7 +1899,7 @@
     "empty_src_desc": "This plugin menu does not provide an embeddable page URL."
   },
   "system_info": {
-    "title": "Management Center Info",
+    "title": "Model Info",
     "about_title": "CLI Proxy API Management Center",
     "models_title": "Available Models",
     "models_desc": "Shows the /models response and uses saved API keys for auth automatically.",
@@ -1965,7 +1970,7 @@
     "toggle_collapse": "Collapse sidebar",
     "expand": "Expand",
     "collapse": "Collapse",
-    "subtitle": "CLI Proxy API Console",
+    "subtitle": "API Console",
     "auth_files_count": "Authentication files: {{count}}"
   },
   "footer": {

@@ -50,16 +50,26 @@ export const oauthApi = {
   startSiwcBind: (name: string, signal?: AbortSignal) =>
     apiClient.post<SiwcBindResponse>('/oauth/siwc/bind', { name }, signal ? { signal } : undefined),
 
-  startAuth: (provider: string, signal?: AbortSignal) => {
+  /**
+   * 二开：GET+query 改为 POST+body。后端只认 body 里的 proxy_url（query 里的会被忽略）。
+   * proxyUrl 非必填：留空/全空白时不发该字段（空串会走 ModeInherit，语义不干净），即全程直连；
+   * 填了则该会话的 授权→兑换→调用→刷新 全程走同一条代理。
+   */
+  startAuth: (provider: string, proxyUrl?: string, signal?: AbortSignal) => {
     const providerKey = normalizeProviderForManagementPath(provider);
-    const params: Record<string, string | boolean> = { provider: providerKey };
+    const body: Record<string, string | boolean> = { provider: providerKey };
     if (WEBUI_SUPPORTED.has(providerKey)) {
-      params.is_webui = true;
+      body.is_webui = true;
     }
-    return apiClient.get<OAuthStartResponse>('/oauth/auth-url', {
-      params,
-      ...(signal ? { signal } : {}),
-    });
+    const proxy = (proxyUrl ?? '').trim();
+    if (proxy) {
+      body.proxy_url = proxy;
+    }
+    return apiClient.post<OAuthStartResponse>(
+      '/oauth/auth-url',
+      body,
+      signal ? { signal } : undefined
+    );
   },
 
   getAuthStatus: (state: string, signal?: AbortSignal) =>

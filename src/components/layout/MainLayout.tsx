@@ -70,6 +70,13 @@ const sidebarIcons: Record<string, ReactNode> = {
   system: <IconSidebarSystem size={18} />,
 };
 
+// 二开：侧边栏隐藏项开关。改回 false 即恢复官方菜单（路由本身未删除）。
+const HIDE_NAV_ITEMS = {
+  quickStart: true,
+  plugins: true,
+  pluginStore: true,
+} as const;
+
 interface SidebarNavLinkItem {
   kind?: 'link';
   path: string;
@@ -607,7 +614,7 @@ export function MainLayout() {
           metaKey: 'nav_meta.dashboard',
           icon: sidebarIcons.dashboard,
         },
-        ...(!isApiKeyFunConfigured ? [quickStartNavItem] : []),
+        ...(!HIDE_NAV_ITEMS.quickStart && !isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },
     {
@@ -643,7 +650,7 @@ export function MainLayout() {
           metaKey: 'nav_meta.routing',
           icon: sidebarIcons.routing,
         },
-        ...(isApiKeyFunConfigured ? [quickStartNavItem] : []),
+        ...(!HIDE_NAV_ITEMS.quickStart && isApiKeyFunConfigured ? [quickStartNavItem] : []),
       ],
     },
     {
@@ -674,7 +681,7 @@ export function MainLayout() {
           metaKey: 'nav_meta.config_management',
           icon: sidebarIcons.config,
         },
-        ...(supportsPlugin
+        ...(supportsPlugin && !HIDE_NAV_ITEMS.plugins
           ? [
               {
                 path: '/plugins',
@@ -682,6 +689,10 @@ export function MainLayout() {
                 metaKey: 'nav_meta.plugins',
                 icon: sidebarIcons.plugins,
               },
+            ]
+          : []),
+        ...(supportsPlugin && !HIDE_NAV_ITEMS.pluginStore
+          ? [
               {
                 path: '/plugin-store',
                 labelKey: 'nav.plugin_store',
@@ -1162,7 +1173,7 @@ export function MainLayout() {
         >
           <div className="sidebar-header">
             <div className="sidebar-brand" title={fullBrandName}>
-              <img src={INLINE_LOGO_JPEG} alt="CPAMC logo" className="sidebar-brand-logo" />
+              <img src={INLINE_LOGO_JPEG} alt="CPA logo" className="sidebar-brand-logo" />
               {showSidebarLabels && (
                 <span className="sidebar-brand-text">
                   <span className="sidebar-brand-title">{abbrBrandName}</span>

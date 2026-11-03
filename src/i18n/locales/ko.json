@@ -58,7 +58,7 @@
   },
   "title": {
     "login": "CLI Proxy API 관리 센터",
-    "abbr": "CPAMC"
+    "abbr": "CPA"
   },
   "splash": {
     "title": "CLI Proxy API",
@@ -111,7 +111,7 @@
     "plugin_store": "플러그인 스토어",
     "config_management": "설정 패널",
     "logs": "로그 뷰어",
-    "system_info": "관리 센터 정보"
+    "system_info": "모델 정보"
   },
   "nav_groups": {
     "operate": "운영",
@@ -132,7 +132,7 @@
     "plugin_store": "플러그인 탐색 및 설치",
     "logs": "요청 추적",
     "config_management": "게이트웨이 설정",
-    "system_info": "런타임 및 진단"
+    "system_info": "사용 가능한 모델"
   },
   "dashboard": {
     "hero_verdict_good": "모든 시스템 정상",
@@ -203,7 +203,7 @@
     "cta_config_desc": "라우팅, 재시도, 로깅 및 접근 권한을 조정합니다.",
     "cta_quota_desc": "자격 증명별 남은 할당량을 확인합니다.",
     "cta_logs_desc": "요청을 실시간 추적하고 오류 보고서를 다운로드합니다.",
-    "cta_system_desc": "버전 세부 정보 및 관리 센터 정보입니다.",
+    "cta_system_desc": "사용 가능한 모델 목록을 확인합니다.",
     "window_m": "{{minutes}}분",
     "window_h": "{{hours}}시간",
     "window_hm": "{{hours}}시간 {{minutes}}분"
@@ -976,7 +976,12 @@
     "restart_login": "다시 시작",
     "success_saved_hint": "자격 증명이 저장되었습니다. 인증 파일에서 관리할 수 있습니다.",
     "sign_up_prompt": "계정이 없나요?",
-    "copied": "복사됨"
+    "copied": "복사됨",
+    "proxy_label": "세션 프록시",
+    "proxy_placeholder": "socks5h://host:port (선택 사항, 비우면 전체 직접 연결)",
+    "proxy_hint": "입력하면 인증, 토큰 교환, 이후 요청과 갱신이 모두 이 프록시를 사용합니다. 비우면 모두 직접 연결됩니다. 브라우저만 프록시를 쓰고 여기를 비워 두지 마세요.",
+    "proxy_in_use": "이번 로그인은 전체 프록시 사용: {{proxy}}",
+    "proxy_direct": "이번 로그인은 프록시 없음: 전체 직접 연결"
   },
   "stats": {
     "success": "성공",
@@ -1894,7 +1899,7 @@
     "empty_src_desc": "이 플러그인 메뉴는 포함 가능한 페이지 URL을 제공하지 않습니다."
   },
   "system_info": {
-    "title": "관리 센터 정보",
+    "title": "모델 정보",
     "about_title": "CLI Proxy API 관리 센터",
     "models_title": "사용 가능한 모델",
     "models_desc": "/models 응답을 표시하며 저장된 API 키를 사용하여 자동으로 인증합니다.",
@@ -1965,7 +1970,7 @@
     "toggle_collapse": "사이드바 접기",
     "expand": "펼치기",
     "collapse": "접기",
-    "subtitle": "CLI Proxy API 콘솔",
+    "subtitle": "API 콘솔",
     "auth_files_count": "인증 파일: {{count}}개"
   },
   "footer": {

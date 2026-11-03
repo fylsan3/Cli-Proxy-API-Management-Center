@@ -28,6 +28,8 @@ export interface ProviderFlowState {
   callbackError?: string;
   /** 本地校验失败（未提交到后端），内联展示在输入框下。 */
   callbackValidation?: string;
+  /** 二开：本次会话创建时提交的代理；undefined = 未填，全程直连。 */
+  proxyUrl?: string;
 }
 
 interface UseOAuthFlowsOptions {
@@ -243,12 +245,15 @@ export function useOAuthFlows({ providerCards, isFocused }: UseOAuthFlowsOptions
     startPolling(provider, state, attempt);
   };
 
-  const startAuth = async (provider: string) => {
+  /** proxyUrl 非必填，留空即全程直连（见 oauthApi.startAuth）。 */
+  const startAuth = async (provider: string, proxyUrl?: string) => {
     // A network error can stop polling while the server is still waiting. Require
     // explicit cancellation before replacing that Devin session.
     if (provider === 'devin' && states[provider]?.state) return;
     const attempt = attempts.current.begin(provider);
+    const proxy = (proxyUrl ?? '').trim() || undefined;
     updateProviderState(provider, {
+      proxyUrl: proxy,
       url: undefined,
       userCode: undefined,
       state: undefined,
@@ -264,7 +269,7 @@ export function useOAuthFlows({ providerCards, isFocused }: UseOAuthFlowsOptions
       callbackSubmitting: false,
     });
     try {
-      const res = await oauthApi.startAuth(provider, attempt.signal);
+      const res = await oauthApi.startAuth(provider, proxy, attempt.signal);
       if (!attempt.isCurrent()) return;
       if (!res.state) {
         const message = t('auth_login.missing_state');

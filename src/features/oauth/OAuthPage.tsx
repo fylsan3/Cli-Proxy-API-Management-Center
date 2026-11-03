@@ -36,7 +36,8 @@ type DialogTarget = { kind: 'oauth'; id: string } | { kind: 'vertex' };
 /**
  * OAuth 登录：提供商画廊（一屏看全）+ 聚焦的授权对话框。
  *
- * 点磁贴即开始登录；对话框可随时关闭，授权在后台继续，磁贴副行实时反映进度。
+ * 二开：点磁贴只打开对话框，先（可选）填会话代理，再点「开始登录」才创建会话；
+ * 对话框可随时关闭，授权在后台继续，磁贴副行实时反映进度。
  * 对话框关闭后保留最后一个目标，让退出动画期间内容不消失。
  */
 export function OAuthPage() {
@@ -56,6 +57,10 @@ export function OAuthPage() {
   const focusedRef = useRef<string | null>(null);
   const [dialog, setDialog] = useState<DialogTarget | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  // 二开：每个提供商一份代理草稿（非必填）。仅存在内存，不落 localStorage。
+  const [proxyDrafts, setProxyDrafts] = useState<Record<string, string>>({});
+  const setProxyDraft = (provider: string, value: string) =>
+    setProxyDrafts((prev) => ({ ...prev, [provider]: value }));
   const [siwcOpen, setSiwcOpen] = useState(false);
   // 每次打开换新 key 重新挂载（全新选择与会话）；关闭后保持挂载，让退出动画走完
   const [siwcKey, setSiwcKey] = useState(0);
@@ -118,8 +123,8 @@ export function OAuthPage() {
     focusedRef.current = card.id;
     setDialog({ kind: 'oauth', id: card.id });
     setDialogOpen(true);
-    // 已有进行中/失败/刚成功的尝试 → 只是重新打开查看；否则立即开始登录
-    if (!flows.states[card.id]?.status) void flows.startAuth(card.id);
+    // 二开：不再自动开始登录。否则会话在用户填代理前就已创建（且是直连），
+    // 造成「浏览器走代理、兑换直连」的配一半。改为在对话框里点「开始登录」。
   };
 
   const openVertex = () => {
@@ -232,7 +237,14 @@ export function OAuthPage() {
           text={(suffix) => flows.providerText(dialogCard.id, suffix)}
           supportsCallback={supportsManualCallback(dialogCard)}
           sponsor={sponsorOf(dialogCard)}
-          onStart={() => void flows.startAuth(dialogCard.id)}
+          onStart={() => void flows.startAuth(dialogCard.id, proxyDrafts[dialogCard.id])}
+          proxy={proxyDrafts[dialogCard.id] ?? ''}
+          onProxyChange={(value) => setProxyDraft(dialogCard.id, value)}
+          onLoginAnother={() => {
+            // 换账号 = 换出口：回到填代理的初始页，并清空上一个账号的代理
+            flows.dismissSuccess(dialogCard.id);
+            setProxyDraft(dialogCard.id, '');
+          }}
           onCancel={() => void flows.cancelAuth(dialogCard.id)}
           onCallbackChange={(value) => flows.setCallbackInput(dialogCard.id, value)}
           onCallbackSubmit={() => void flows.submitCallback(dialogCard.id)}

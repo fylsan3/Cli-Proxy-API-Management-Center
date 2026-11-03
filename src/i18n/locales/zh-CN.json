@@ -58,7 +58,7 @@
   },
   "title": {
     "login": "CLI Proxy API Management Center",
-    "abbr": "CPAMC"
+    "abbr": "CPA"
   },
   "splash": {
     "title": "CLI Proxy API",
@@ -111,7 +111,7 @@
     "plugin_store": "插件商店",
     "config_management": "配置面板",
     "logs": "日志查看",
-    "system_info": "中心信息"
+    "system_info": "模型信息"
   },
   "nav_groups": {
     "operate": "运行",
@@ -132,7 +132,7 @@
     "plugin_store": "发现并安装插件",
     "logs": "请求追踪与排查",
     "config_management": "网关基础配置",
-    "system_info": "运行与诊断信息"
+    "system_info": "可用模型列表"
   },
   "dashboard": {
     "hero_verdict_good": "运行平稳",
@@ -203,7 +203,7 @@
     "cta_config_desc": "调整路由、重试、日志与访问控制。",
     "cta_quota_desc": "查看各凭证的剩余额度。",
     "cta_logs_desc": "实时跟踪请求并下载错误报告。",
-    "cta_system_desc": "版本详情与管理中心信息。",
+    "cta_system_desc": "查看当前可用的模型列表。",
     "window_m": "{{minutes}} 分钟",
     "window_h": "{{hours}} 小时",
     "window_hm": "{{hours}} 小时 {{minutes}} 分"
@@ -975,7 +975,12 @@
     "restart_login": "重新开始",
     "success_saved_hint": "凭证已保存，可在认证文件页管理。",
     "sign_up_prompt": "还没有账号？",
-    "copied": "已复制"
+    "copied": "已复制",
+    "proxy_label": "会话代理",
+    "proxy_placeholder": "socks5h://host:port（可留空，留空则全程直连）",
+    "proxy_hint": "填了：授权、兑换、后续调用和刷新全程走这条代理；留空：全程直连。只要别「浏览器走代理、这里留空」就是一致的。",
+    "proxy_in_use": "本次登录全程走代理：{{proxy}}",
+    "proxy_direct": "本次登录未填代理：全程直连"
   },
   "stats": {
     "success": "成功",
@@ -1893,7 +1898,7 @@
     "empty_src_desc": "该插件菜单未提供可嵌入的页面地址。"
   },
   "system_info": {
-    "title": "管理中心信息",
+    "title": "模型信息",
     "about_title": "CLI Proxy API Management Center",
     "models_title": "可用模型列表",
     "models_desc": "展示 /models 返回的模型，并自动使用服务器保存的 API Key 进行鉴权。",
@@ -1964,7 +1969,7 @@
     "toggle_collapse": "收起侧边栏",
     "expand": "展开",
     "collapse": "收起",
-    "subtitle": "CLI Proxy API 管理控制台",
+    "subtitle": "API 管理控制台",
     "auth_files_count": "认证文件：{{count}} 个"
   },
   "footer": {

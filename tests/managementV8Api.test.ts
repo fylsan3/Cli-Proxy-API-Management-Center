@@ -238,13 +238,31 @@ describe('v8 management API contracts', () => {
     const get = mock('get');
     const post = mock('post');
     await oauthApi.startAuth('anthropic');
-    expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-      params: { provider: 'claude', is_webui: true },
-    });
+    expect(post).toHaveBeenLastCalledWith(
+      '/oauth/auth-url',
+      { provider: 'claude', is_webui: true },
+      undefined
+    );
     await oauthApi.startAuth('example-plugin');
-    expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-      params: { provider: 'example-plugin' },
-    });
+    expect(post).toHaveBeenLastCalledWith(
+      '/oauth/auth-url',
+      { provider: 'example-plugin' },
+      undefined
+    );
+    // 二开：代理只放 POST body；留空/空白不发字段
+    await oauthApi.startAuth('anthropic', '  socks5h://127.0.0.1:1080  ');
+    expect(post).toHaveBeenLastCalledWith(
+      '/oauth/auth-url',
+      { provider: 'claude', is_webui: true, proxy_url: 'socks5h://127.0.0.1:1080' },
+      undefined
+    );
+    await oauthApi.startAuth('anthropic', '   ');
+    expect(post).toHaveBeenLastCalledWith(
+      '/oauth/auth-url',
+      { provider: 'claude', is_webui: true },
+      undefined
+    );
+    expect(get).not.toHaveBeenCalledWith('/oauth/auth-url', expect.anything());
     await oauthApi.submitCallback('anthropic', 'https://example.test/callback?code=test');
     expect(post).toHaveBeenLastCalledWith(
       '/oauth/callback',

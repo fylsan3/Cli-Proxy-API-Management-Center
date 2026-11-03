@@ -39,17 +39,14 @@ describe('Muse (Meta) provider and device OAuth', () => {
       expires_in: 600,
     };
     const signal = new AbortController().signal;
-    const get = spyOn(apiClient, 'get').mockResolvedValue(response);
+    const post = spyOn(apiClient, 'post').mockResolvedValue(response);
     try {
-      expect(await oauthApi.startAuth(provider, signal)).toEqual(response);
-      expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-        params: { provider: 'meta' },
-        signal,
-      });
+      expect(await oauthApi.startAuth(provider, undefined, signal)).toEqual(response);
+      expect(post).toHaveBeenLastCalledWith('/oauth/auth-url', { provider: 'meta' }, { signal });
       await oauthApi.startAuth('Muse');
-      expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', { params: { provider: 'meta' } });
+      expect(post).toHaveBeenLastCalledWith('/oauth/auth-url', { provider: 'meta' }, undefined);
     } finally {
-      get.mockRestore();
+      post.mockRestore();
     }
   });
 

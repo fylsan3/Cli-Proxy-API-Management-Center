@@ -11,21 +11,23 @@ import {
 
 describe('Kimi regional login', () => {
   test('uses separate provider parameters and preserves cancellation', async () => {
-    const get = spyOn(apiClient, 'get').mockResolvedValue({ url: 'https://example.test' });
+    const post = spyOn(apiClient, 'post').mockResolvedValue({ url: 'https://example.test' });
     const controller = new AbortController();
     try {
-      await oauthApi.startAuth('kimi', controller.signal);
-      expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-        params: { provider: 'kimi' },
-        signal: controller.signal,
-      });
-      await oauthApi.startAuth('kimi-ai', controller.signal);
-      expect(get).toHaveBeenLastCalledWith('/oauth/auth-url', {
-        params: { provider: 'kimi-ai' },
-        signal: controller.signal,
-      });
+      await oauthApi.startAuth('kimi', undefined, controller.signal);
+      expect(post).toHaveBeenLastCalledWith(
+        '/oauth/auth-url',
+        { provider: 'kimi' },
+        { signal: controller.signal }
+      );
+      await oauthApi.startAuth('kimi-ai', undefined, controller.signal);
+      expect(post).toHaveBeenLastCalledWith(
+        '/oauth/auth-url',
+        { provider: 'kimi-ai' },
+        { signal: controller.signal }
+      );
     } finally {
-      get.mockRestore();
+      post.mockRestore();
     }
   });
 

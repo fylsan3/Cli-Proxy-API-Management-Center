@@ -58,7 +58,7 @@
   },
   "title": {
     "login": "Trung tâm Quản lý CLI Proxy API",
-    "abbr": "CPAMC"
+    "abbr": "CPA"
   },
   "splash": {
     "title": "CLI Proxy API",
@@ -111,7 +111,7 @@
     "plugin_store": "Cửa hàng Plugin",
     "config_management": "Bảng cấu hình",
     "logs": "Trình xem Log",
-    "system_info": "Thông tin Trung tâm Quản lý"
+    "system_info": "Thông tin Model"
   },
   "nav_groups": {
     "operate": "Vận hành",
@@ -132,7 +132,7 @@
     "plugin_store": "Khám phá & cài đặt plugin",
     "logs": "Truy vết yêu cầu",
     "config_management": "Cấu hình gateway",
-    "system_info": "Runtime & chẩn đoán"
+    "system_info": "Model khả dụng"
   },
   "dashboard": {
     "hero_verdict_good": "Mọi hệ thống ổn định",
@@ -203,7 +203,7 @@
     "cta_config_desc": "Tinh chỉnh định tuyến, thử lại, ghi log và truy cập.",
     "cta_quota_desc": "Kiểm tra quota còn lại của từng credential.",
     "cta_logs_desc": "Theo dõi yêu cầu và tải báo cáo lỗi.",
-    "cta_system_desc": "Chi tiết phiên bản và thông tin trung tâm quản lý.",
+    "cta_system_desc": "Xem danh sách model khả dụng.",
     "window_m": "{{minutes}}p",
     "window_h": "{{hours}}g",
     "window_hm": "{{hours}}g {{minutes}}p"
@@ -932,7 +932,12 @@
     "kimi_ai_oauth_status_success": "Xác thực thành công!",
     "kimi_ai_oauth_status_error": "Xác thực thất bại:",
     "kimi_ai_oauth_start_error": "Không thể bắt đầu đăng nhập Kimi quốc tế:",
-    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:"
+    "kimi_ai_oauth_polling_error": "Không thể kiểm tra trạng thái xác thực:",
+    "proxy_label": "Proxy phiên",
+    "proxy_placeholder": "socks5h://host:port (tùy chọn; để trống = kết nối trực tiếp)",
+    "proxy_hint": "Nếu điền, ủy quyền, đổi token, các yêu cầu sau và làm mới đều đi qua proxy này; để trống thì tất cả kết nối trực tiếp. Đừng chỉ dùng proxy ở trình duyệt mà để trống ô này.",
+    "proxy_in_use": "Lần đăng nhập này dùng proxy toàn trình: {{proxy}}",
+    "proxy_direct": "Lần đăng nhập này không có proxy: kết nối trực tiếp toàn trình"
   },
   "stats": {
     "success": "Thành công",
@@ -1850,7 +1855,7 @@
     "empty_src_desc": "Menu plugin này không cung cấp URL trang nhúng được."
   },
   "system_info": {
-    "title": "Thông tin Trung tâm Quản lý",
+    "title": "Thông tin Model",
     "about_title": "Trung tâm Quản lý CLI Proxy API",
     "models_title": "Model khả dụng",
     "models_desc": "Hiển thị phản hồi /models và tự động dùng API key đã lưu để xác thực.",
@@ -1921,7 +1926,7 @@
     "toggle_collapse": "Thu gọn thanh bên",
     "expand": "Mở rộng",
     "collapse": "Thu gọn",
-    "subtitle": "Bảng điều khiển CLI Proxy API",
+    "subtitle": "Bảng điều khiển API",
     "auth_files_count": "File xác thực: {{count}}"
   },
   "footer": {

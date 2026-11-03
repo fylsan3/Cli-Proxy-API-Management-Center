@@ -58,7 +58,7 @@
   },
   "title": {
     "login": "CLIProxyAPI Yönetim Merkezi",
-    "abbr": "CPAMC"
+    "abbr": "CPA"
   },
   "splash": {
     "title": "CLIProxyAPI",
@@ -111,7 +111,7 @@
     "plugin_store": "Eklenti Mağazası",
     "config_management": "Yapılandırma Paneli",
     "logs": "Günlük Görüntüleyici",
-    "system_info": "Yönetim Merkezi Bilgisi"
+    "system_info": "Model Bilgisi"
   },
   "nav_groups": {
     "operate": "İşlet",
@@ -132,7 +132,7 @@
     "plugin_store": "Eklentileri Keşfet ve Kur",
     "logs": "İstek İzleme",
     "config_management": "Ağ Geçidi Yapılandırması",
-    "system_info": "Çalışma Zamanı ve Tanılama"
+    "system_info": "Kullanılabilir modeller"
   },
   "dashboard": {
     "hero_verdict_good": "Tüm Sistemler Dengede",
@@ -203,7 +203,7 @@
     "cta_config_desc": "Yönlendirme, Yeniden Deneme, Günlük ve Erişimi Ayarla.",
     "cta_quota_desc": "Kimlik Bilgisi Başına Kalan Kotayı Kontrol Et.",
     "cta_logs_desc": "İstekleri İzle ve Hata Raporlarını İndir.",
-    "cta_system_desc": "Sürüm Ayrıntıları ve Yönetim Merkezi Bilgisi.",
+    "cta_system_desc": "Kullanılabilir modellerin listesini görüntüleyin.",
     "window_m": "{{minutes}} dk",
     "window_h": "{{hours}} sa",
     "window_hm": "{{hours}} sa {{minutes}} dk"
@@ -976,7 +976,12 @@
     "restart_login": "Baştan Başla",
     "success_saved_hint": "Kimlik Bilgisi Kaydedildi. Kimlik Dosyalarında Yönet.",
     "sign_up_prompt": "Henüz Hesap Yok Mu?",
-    "copied": "Kopyalandı"
+    "copied": "Kopyalandı",
+    "proxy_label": "Oturum Proxy'si",
+    "proxy_placeholder": "socks5h://host:port (isteğe bağlı; boş bırakılırsa doğrudan bağlantı)",
+    "proxy_hint": "Doldurulursa yetkilendirme, token değişimi, sonraki istekler ve yenilemeler bu proxy'yi kullanır; boşsa tümü doğrudan bağlanır. Yalnızca tarayıcıda proxy kullanıp burayı boş bırakmayın.",
+    "proxy_in_use": "Bu giriş baştan sona proxy kullanıyor: {{proxy}}",
+    "proxy_direct": "Bu giriş için proxy yok: baştan sona doğrudan bağlantı"
   },
   "stats": {
     "success": "Başarılı",
@@ -1894,7 +1899,7 @@
     "empty_src_desc": "Bu Eklenti Menüsü Gömülebilir Bir Sayfa URL'si Sağlamıyor."
   },
   "system_info": {
-    "title": "Yönetim Merkezi Bilgisi",
+    "title": "Model Bilgisi",
     "about_title": "CLIProxyAPI Yönetim Merkezi",
     "models_title": "Kullanılabilir Modeller",
     "models_desc": "/models Yanıtını Gösterir ve Kimlik Doğrulama için Kayıtlı API Anahtarlarını Otomatik Kullanır.",
@@ -1965,7 +1970,7 @@
     "toggle_collapse": "Kenar Çubuğunu Daralt",
     "expand": "Genişlet",
     "collapse": "Daralt",
-    "subtitle": "CLIProxyAPI Konsolu",
+    "subtitle": "API Konsolu",
     "auth_files_count": "Kimlik Doğrulama Dosyaları: {{count}}"
   },
   "footer": {
