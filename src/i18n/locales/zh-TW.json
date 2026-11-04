@@ -110,7 +110,7 @@
     "plugins": "插件管理",
     "plugin_store": "插件商店",
     "config_management": "設定面板",
-    "recommended_config": "推薦參數",
+    "recommended_config": "系統參數",
     "logs": "記錄檢視",
     "system_info": "模型資訊"
   },
@@ -133,7 +133,7 @@
     "plugin_store": "探索並安裝插件",
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
-    "recommended_config": "一鍵優化後端參數",
+    "recommended_config": "查看與調整後端參數",
     "system_info": "可用模型清單"
   },
   "dashboard": {
@@ -556,7 +556,6 @@
     "reset_confirm_button": "確認重置",
     "reset_not_confirmed": "尚未確認額度重置成功，請重新整理額度後再決定是否重試。",
     "reset_cooldown_failed": "額度已重置，但代理冷卻清除失敗。請在原連線的認證檔案頁面使用「清除冷卻」，不要再次消耗重置卡。",
-
     "reset_success": "已重置「{{name}}」的 Codex 配額",
     "reset_failed": "重置「{{name}}」的 Codex 配額失敗：{{message}}",
     "plan_plus": "Plus",
@@ -2467,8 +2466,8 @@
     "expired": "綁定工作階段已過期，請重新開始。"
   },
   "recommended_config": {
-    "title": "推薦參數",
-    "subtitle": "檢查 CPA 後端參數，一鍵改成推薦值。只修改你勾選的項，修改前自動備份。",
+    "title": "系統參數",
+    "subtitle": "檢查 CPA 後端參數，可一鍵改成推薦值，也可以點「編輯」自己填。只修改你選中的項，修改前自動備份。",
     "recheck": "重新檢查",
     "load_failed": "讀取設定失敗",
     "summary_pending": "有 {{count}} 項參數和推薦值不一致",
@@ -2553,6 +2552,10 @@
       "logs_max_total_size": {
         "title": "日誌總大小上限（MB）",
         "desc": "日誌超過 500MB 自動刪最舊的，防止磁盤被寫滿。"
+      },
+      "save_cooldown_status": {
+        "title": "冷卻狀態存檔",
+        "desc": "帳號限流冷卻的狀態寫到磁碟（帳號檔案旁的 .cds 檔案），CPA 重啟後繼續冷卻，不會馬上又去請求被限流的帳號。"
       }
     },
     "safety": {
@@ -2586,6 +2589,17 @@
         "ok": "已關閉",
         "tip": "pprof 已開啟，建議關閉。"
       }
-    }
+    },
+    "edit": "編輯",
+    "edit_title": "編輯：{{name}}",
+    "edit_save": "儲存",
+    "edit_use_recommended": "填入推薦值",
+    "edit_success": "已儲存，並已備份原設定",
+    "edit_unchanged": "和目前值一樣，無需儲存。",
+    "edit_error_invalid_number": "請輸入整數",
+    "edit_error_out_of_range": "超出允許範圍",
+    "edit_error_empty": "請填寫或選擇一個值",
+    "range_min": "最小 {{min}}",
+    "range_both": "範圍 {{min}} ~ {{max}}"
   }
 }

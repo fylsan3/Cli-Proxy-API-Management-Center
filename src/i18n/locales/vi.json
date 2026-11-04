@@ -110,7 +110,7 @@
     "plugins": "Plugin",
     "plugin_store": "Cửa hàng Plugin",
     "config_management": "Bảng cấu hình",
-    "recommended_config": "Tham số đề xuất",
+    "recommended_config": "Tham số hệ thống",
     "logs": "Trình xem Log",
     "system_info": "Thông tin Model"
   },
@@ -133,7 +133,7 @@
     "plugin_store": "Khám phá & cài đặt plugin",
     "logs": "Truy vết yêu cầu",
     "config_management": "Cấu hình gateway",
-    "recommended_config": "Tối ưu tham số backend một chạm",
+    "recommended_config": "Xem và điều chỉnh tham số backend",
     "system_info": "Model khả dụng"
   },
   "dashboard": {
@@ -2446,8 +2446,8 @@
     "expired": "Phiên liên kết đã hết hạn. Hãy bắt đầu lại."
   },
   "recommended_config": {
-    "title": "Recommended Settings",
-    "subtitle": "Check CPA backend settings and apply recommended values. Only selected items change; the current config is backed up first.",
+    "title": "System Settings",
+    "subtitle": "Check CPA backend settings, apply recommended values in one click, or use Edit to set your own. Only selected items change; the current config is backed up first.",
     "recheck": "Re-check",
     "load_failed": "Failed to read configuration",
     "summary_pending": "{{count}} setting(s) differ from the recommended values",
@@ -2532,6 +2532,10 @@
       "logs_max_total_size": {
         "title": "Max total log size (MB)",
         "desc": "Delete the oldest logs beyond 500MB to avoid filling the disk."
+      },
+      "save_cooldown_status": {
+        "title": "Persist cooldown status",
+        "desc": "Write credential cooldown status to disk (.cds files next to auth files) so cooldowns survive a CPA restart."
       }
     },
     "safety": {
@@ -2565,6 +2569,17 @@
         "ok": "Off",
         "tip": "pprof is enabled; turn it off."
       }
-    }
+    },
+    "edit": "Edit",
+    "edit_title": "Edit: {{name}}",
+    "edit_save": "Save",
+    "edit_use_recommended": "Use recommended",
+    "edit_success": "Saved; original config backed up",
+    "edit_unchanged": "Same as the current value, nothing to save.",
+    "edit_error_invalid_number": "Please enter an integer",
+    "edit_error_out_of_range": "Out of the allowed range",
+    "edit_error_empty": "Please enter or choose a value",
+    "range_min": "Minimum {{min}}",
+    "range_both": "Range {{min}} – {{max}}"
   }
 }

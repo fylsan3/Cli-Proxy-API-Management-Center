@@ -1,5 +1,6 @@
 /**
- * 二开：推荐参数页面（新增页面，不修改任何原有功能）。
+ * 二开：系统参数页面（原名「推荐参数」；新增页面，不修改任何原有功能）。
+ * 每一项都可以「编辑」自己填值，写入前同样自动备份、可一键还原。
  */
 
 import { useEffect, useMemo, useState } from 'react';
@@ -8,6 +9,9 @@ import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Modal } from '@/components/ui/Modal';
 import { SelectionCheckbox } from '@/components/ui/SelectionCheckbox';
+import { Input } from '@/components/ui/Input';
+import { Select } from '@/components/ui/Select';
+import { ToggleSwitch } from '@/components/ui/ToggleSwitch';
 import {
   IconAlertTriangle,
   IconCheck,
@@ -15,6 +19,7 @@ import {
   IconDownload,
   IconEye,
   IconInfo,
+  IconPencil,
   IconRefreshCw,
 } from '@/components/ui/icons';
 import { useAuthStore, useNotificationStore } from '@/stores';
@@ -22,6 +27,9 @@ import {
   checkRules,
   checkSafety,
   formatValue,
+  isSameValue,
+  parseEditValue,
+  valueKind,
   type RuleCheckResult,
   type RuleGroup,
 } from './rules';
@@ -49,6 +57,9 @@ export function RecommendedConfigPage() {
   const [applying, setApplying] = useState(false);
   const [restoring, setRestoring] = useState(false);
   const [backup, setBackup] = useState<RecommendedBackup | null>(() => readBackup(apiBase));
+  // 编辑：当前正在编辑的规则 id 和输入值
+  const [editing, setEditing] = useState<{ id: string; input: string | boolean } | null>(null);
+  const [savingEdit, setSavingEdit] = useState(false);
 
   const results = useMemo(() => (config ? checkRules(config) : []), [config]);
   const safety = useMemo(() => (config ? checkSafety(config) : []), [config]);
@@ -122,6 +133,50 @@ export function RecommendedConfigPage() {
     }
   };
 
+  const openEdit = (item: RuleCheckResult) => {
+    const input =
+      valueKind(item.rule) === 'boolean' ? item.effective === true : formatValue(item.effective);
+    setEditing({ id: item.rule.id, input });
+  };
+
+  const editItem = editing ? results.find((item) => item.rule.id === editing.id) : undefined;
+  const editParsed = editItem && editing ? parseEditValue(editItem.rule, editing.input) : null;
+  const editUnchanged =
+    !!editItem &&
+    editParsed?.value !== undefined &&
+    editItem.present &&
+    isSameValue(editItem.effective, editParsed.value);
+
+  const handleSaveEdit = async () => {
+    if (!editItem || editParsed?.value === undefined) return;
+    setSavingEdit(true);
+    try {
+      const saved = await applyRecommended(apiBase, config, [editItem.rule.id], {
+        [editItem.rule.id]: editParsed.value,
+      });
+      setBackup(saved);
+      setEditing(null);
+      showNotification(t('recommended_config.edit_success'), 'success');
+      await reload();
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      showNotification(
+        `${t('recommended_config.apply_failed')}${message ? `: ${message}` : ''}`,
+        'error'
+      );
+    } finally {
+      setSavingEdit(false);
+    }
+  };
+
+  const rangeHint = (item: RuleCheckResult) => {
+    const { min, max } = item.rule;
+    if (min !== undefined && max !== undefined)
+      return t('recommended_config.range_both', { min, max });
+    if (min !== undefined) return t('recommended_config.range_min', { min });
+    return undefined;
+  };
+
   const pathText = (item: RuleCheckResult) => item.rule.path.join('.');
   const currentText = (item: RuleCheckResult) =>
     item.present
@@ -164,11 +219,19 @@ export function RecommendedConfigPage() {
             <span className={styles.valueLabel}>{t('recommended_config.recommended')}</span>
             <span className={styles.valueNew}>{formatValue(item.rule.recommended)}</span>
           </div>
-          {!item.ok && (
-            <Button variant="ghost" size="sm" onClick={() => setConfirmIds([id])}>
-              {t('recommended_config.apply_one')}
+          <div className={styles.rowButtons}>
+            <Button variant="ghost" size="sm" onClick={() => openEdit(item)}>
+              <span className={styles.btnInner}>
+                <IconPencil size={14} />
+                {t('recommended_config.edit')}
+              </span>
             </Button>
-          )}
+            {!item.ok && (
+              <Button variant="ghost" size="sm" onClick={() => setConfirmIds([id])}>
+                {t('recommended_config.apply_one')}
+              </Button>
+            )}
+          </div>
         </div>
       </div>
     );
@@ -396,6 +459,103 @@ export function RecommendedConfigPage() {
           ))}
         </div>
         <p className={styles.confirmNote}>{t('recommended_config.confirm_note')}</p>
+      </Modal>
+
+      <Modal
+        open={editing !== null && !!editItem}
+        title={
+          editItem
+            ? t('recommended_config.edit_title', {
+                name: t(`recommended_config.rules.${editItem.rule.id}.title`),
+              })
+            : ''
+        }
+        onClose={() => !savingEdit && setEditing(null)}
+        closeDisabled={savingEdit}
+        footer={
+          <>
+            <Button variant="ghost" disabled={savingEdit} onClick={() => setEditing(null)}>
+              {t('recommended_config.cancel')}
+            </Button>
+            <Button
+              variant="primary"
+              loading={savingEdit}
+              disabled={editParsed?.value === undefined || editUnchanged}
+              onClick={() => void handleSaveEdit()}
+            >
+              {t('recommended_config.edit_save')}
+            </Button>
+          </>
+        }
+      >
+        {editItem && editing ? (
+          <div className={styles.editBody}>
+            <code className={styles.path}>{pathText(editItem)}</code>
+            <div className={styles.desc}>
+              {t(`recommended_config.rules.${editItem.rule.id}.desc`)}
+            </div>
+            <div className={styles.editField}>
+              {valueKind(editItem.rule) === 'boolean' ? (
+                <ToggleSwitch
+                  checked={editing.input === true}
+                  onChange={(value) => setEditing({ id: editing.id, input: value })}
+                  label={editing.input === true ? 'true' : 'false'}
+                  ariaLabel={t(`recommended_config.rules.${editItem.rule.id}.title`)}
+                />
+              ) : valueKind(editItem.rule) === 'enum' ? (
+                <Select
+                  value={String(editing.input)}
+                  options={(editItem.rule.options ?? []).map((value) => ({ value, label: value }))}
+                  onChange={(value) => setEditing({ id: editing.id, input: value })}
+                  ariaLabel={t(`recommended_config.rules.${editItem.rule.id}.title`)}
+                  fullWidth
+                />
+              ) : (
+                <Input
+                  value={String(editing.input)}
+                  inputMode={valueKind(editItem.rule) === 'number' ? 'numeric' : undefined}
+                  onChange={(event) => setEditing({ id: editing.id, input: event.target.value })}
+                  aria-label={t(`recommended_config.rules.${editItem.rule.id}.title`)}
+                  hint={rangeHint(editItem)}
+                  error={
+                    editParsed?.error
+                      ? t(`recommended_config.edit_error_${editParsed.error}`)
+                      : undefined
+                  }
+                />
+              )}
+            </div>
+            <div className={styles.editMeta}>
+              <span>
+                {t('recommended_config.current')}：{currentText(editItem)}
+              </span>
+              <span>
+                {t('recommended_config.recommended')}：{formatValue(editItem.rule.recommended)}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                disabled={savingEdit}
+                onClick={() =>
+                  setEditing({
+                    id: editing.id,
+                    input:
+                      valueKind(editItem.rule) === 'boolean'
+                        ? editItem.rule.recommended === true
+                        : formatValue(editItem.rule.recommended),
+                  })
+                }
+              >
+                {t('recommended_config.edit_use_recommended')}
+              </Button>
+            </div>
+            {editUnchanged ? (
+              <p className={styles.confirmNote}>{t('recommended_config.edit_unchanged')}</p>
+            ) : (
+              <p className={styles.confirmNote}>{t('recommended_config.confirm_note')}</p>
+            )}
+          </div>
+        ) : null}
       </Modal>
     </div>
   );

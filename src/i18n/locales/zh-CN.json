@@ -110,7 +110,7 @@
     "plugins": "插件管理",
     "plugin_store": "插件商店",
     "config_management": "配置面板",
-    "recommended_config": "推荐参数",
+    "recommended_config": "系统参数",
     "logs": "日志查看",
     "system_info": "模型信息"
   },
@@ -133,7 +133,7 @@
     "plugin_store": "发现并安装插件",
     "logs": "请求追踪与排查",
     "config_management": "网关基础配置",
-    "recommended_config": "一键优化后端参数",
+    "recommended_config": "查看与调整后端参数",
     "system_info": "可用模型列表"
   },
   "dashboard": {
@@ -556,7 +556,6 @@
     "reset_confirm_button": "确认重置",
     "reset_not_confirmed": "未确认额度重置成功，请刷新额度后再决定是否重试。",
     "reset_cooldown_failed": "额度已重置，但代理冷却清除失败。请在原连接的认证文件页面使用“清除冷却”，不要再次消耗重置卡。",
-
     "reset_success": "已重置 \"{{name}}\" 的 Codex 额度",
     "reset_failed": "重置 \"{{name}}\" 的 Codex 额度失败：{{message}}",
     "plan_plus": "Plus",
@@ -2439,8 +2438,8 @@
     "expired": "绑定会话已过期，请重新开始。"
   },
   "recommended_config": {
-    "title": "推荐参数",
-    "subtitle": "检查 CPA 后端参数，一键改成推荐值。只修改你勾选的项，修改前自动备份。",
+    "title": "系统参数",
+    "subtitle": "检查 CPA 后端参数，可一键改成推荐值，也可以点「编辑」自己填。只修改你选中的项，修改前自动备份。",
     "recheck": "重新检查",
     "load_failed": "读取配置失败",
     "summary_pending": "有 {{count}} 项参数和推荐值不一致",
@@ -2525,6 +2524,10 @@
       "logs_max_total_size": {
         "title": "日志总大小上限（MB）",
         "desc": "日志超过 500MB 自动删最旧的，防止磁盘被写满。"
+      },
+      "save_cooldown_status": {
+        "title": "冷却状态存盘",
+        "desc": "账号限流冷却的状态写到磁盘（账号文件旁的 .cds 文件），CPA 重启后继续冷却，不会马上又去请求被限流的账号。"
       }
     },
     "safety": {
@@ -2558,6 +2561,17 @@
         "ok": "已关闭",
         "tip": "pprof 已开启，建议关闭。"
       }
-    }
+    },
+    "edit": "编辑",
+    "edit_title": "编辑：{{name}}",
+    "edit_save": "保存",
+    "edit_use_recommended": "填入推荐值",
+    "edit_success": "已保存，并已备份原配置",
+    "edit_unchanged": "和当前值一样，无需保存。",
+    "edit_error_invalid_number": "请输入整数",
+    "edit_error_out_of_range": "超出允许范围",
+    "edit_error_empty": "请填写或选择一个值",
+    "range_min": "最小 {{min}}",
+    "range_both": "范围 {{min}} ~ {{max}}"
   }
 }

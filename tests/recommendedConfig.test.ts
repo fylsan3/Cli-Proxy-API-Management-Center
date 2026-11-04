@@ -6,6 +6,7 @@ import {
   checkRules,
   checkSafety,
   countPending,
+  parseEditValue,
   splitUndo,
 } from '../src/features/recommendedConfig/rules';
 import en from '../src/i18n/locales/en.json';
@@ -26,6 +27,7 @@ const ALL_RECOMMENDED = {
     'session-affinity': true,
     'session-affinity-ttl': '1h',
     'session-affinity-rebind-on': 'any',
+    cooldown: { 'save-cooldown-status': true },
   },
   observability: {
     usage: { 'usage-statistics-enabled': true, 'redis-usage-queue-retention-seconds': 1800 },
@@ -60,6 +62,30 @@ describe('recommended config rules', () => {
       upstream: { claude: { 'model-level-cooling': true } },
     });
     expect(buildRecommendedPatch([])).toEqual({});
+  });
+
+  test('edit overrides replace the recommended value for that field only', () => {
+    expect(
+      buildRecommendedPatch(['usage_queue_retention', 'save_cooldown_status'], {
+        usage_queue_retention: 600,
+      })
+    ).toEqual({
+      observability: { usage: { 'redis-usage-queue-retention-seconds': 600 } },
+      routing: { cooldown: { 'save-cooldown-status': true } },
+    });
+  });
+
+  test('edit input validation', () => {
+    const rule = (id: string) => RECOMMENDED_RULES.find((r) => r.id === id)!;
+    expect(parseEditValue(rule('usage_queue_retention'), '600')).toEqual({ value: 600 });
+    expect(parseEditValue(rule('usage_queue_retention'), '4000').error).toBe('out_of_range');
+    expect(parseEditValue(rule('usage_queue_retention'), '0').error).toBe('out_of_range');
+    expect(parseEditValue(rule('usage_queue_retention'), '1.5').error).toBe('invalid_number');
+    expect(parseEditValue(rule('streaming_keepalive'), '').error).toBe('empty');
+    expect(parseEditValue(rule('session_affinity'), false)).toEqual({ value: false });
+    expect(parseEditValue(rule('session_affinity_rebind_on'), 'quota')).toEqual({ value: 'quota' });
+    expect(parseEditValue(rule('session_affinity_rebind_on'), 'x').error).toBe('empty');
+    expect(parseEditValue(rule('session_affinity_ttl'), '2h')).toEqual({ value: '2h' });
   });
 
   test('undo restores original values and deletes fields that were unset', () => {

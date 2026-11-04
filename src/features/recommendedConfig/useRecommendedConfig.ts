@@ -12,6 +12,7 @@ import {
   buildUndoEntries,
   countPending,
   splitUndo,
+  type ConfigScalar,
   type UndoEntry,
 } from './rules';
 
@@ -59,11 +60,12 @@ function fieldUrl(path: readonly string[]) {
   return `/config/${path.map((key) => encodeURIComponent(key)).join('/')}`;
 }
 
-/** 应用：先备份（整份 config.yaml + 字段原值），再只 PATCH 勾选项 */
+/** 应用：先备份（整份 config.yaml + 字段原值），再只 PATCH 勾选项（overrides = 编辑时自己填的值） */
 export async function applyRecommended(
   apiBase: string,
   config: unknown,
-  ruleIds: string[]
+  ruleIds: string[],
+  overrides: Readonly<Record<string, ConfigScalar>> = {}
 ): Promise<RecommendedBackup> {
   const revision = apiClient.getConnectionRevision();
   const yaml = await configFileApi.fetchConfigYaml();
@@ -77,7 +79,7 @@ export async function applyRecommended(
   if (apiClient.getConnectionRevision() !== revision) {
     throw new Error('Connection changed while applying configuration');
   }
-  await apiClient.patch('/config', buildRecommendedPatch(ruleIds));
+  await apiClient.patch('/config', buildRecommendedPatch(ruleIds, overrides));
   notifyChanged();
   return backup;
 }

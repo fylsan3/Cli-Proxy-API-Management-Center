@@ -110,7 +110,7 @@
     "plugins": "플러그인",
     "plugin_store": "플러그인 스토어",
     "config_management": "설정 패널",
-    "recommended_config": "권장 설정",
+    "recommended_config": "시스템 설정",
     "logs": "로그 뷰어",
     "system_info": "모델 정보"
   },
@@ -133,7 +133,7 @@
     "plugin_store": "플러그인 탐색 및 설치",
     "logs": "요청 추적",
     "config_management": "게이트웨이 설정",
-    "recommended_config": "백엔드 설정 원클릭 최적화",
+    "recommended_config": "백엔드 설정 확인 및 조정",
     "system_info": "사용 가능한 모델"
   },
   "dashboard": {
@@ -2440,8 +2440,8 @@
     "expired": "바인딩 세션이 만료되었습니다. 다시 시작하세요."
   },
   "recommended_config": {
-    "title": "Recommended Settings",
-    "subtitle": "Check CPA backend settings and apply recommended values. Only selected items change; the current config is backed up first.",
+    "title": "System Settings",
+    "subtitle": "Check CPA backend settings, apply recommended values in one click, or use Edit to set your own. Only selected items change; the current config is backed up first.",
     "recheck": "Re-check",
     "load_failed": "Failed to read configuration",
     "summary_pending": "{{count}} setting(s) differ from the recommended values",
@@ -2526,6 +2526,10 @@
       "logs_max_total_size": {
         "title": "Max total log size (MB)",
         "desc": "Delete the oldest logs beyond 500MB to avoid filling the disk."
+      },
+      "save_cooldown_status": {
+        "title": "Persist cooldown status",
+        "desc": "Write credential cooldown status to disk (.cds files next to auth files) so cooldowns survive a CPA restart."
       }
     },
     "safety": {
@@ -2559,6 +2563,17 @@
         "ok": "Off",
         "tip": "pprof is enabled; turn it off."
       }
-    }
+    },
+    "edit": "Edit",
+    "edit_title": "Edit: {{name}}",
+    "edit_save": "Save",
+    "edit_use_recommended": "Use recommended",
+    "edit_success": "Saved; original config backed up",
+    "edit_unchanged": "Same as the current value, nothing to save.",
+    "edit_error_invalid_number": "Please enter an integer",
+    "edit_error_out_of_range": "Out of the allowed range",
+    "edit_error_empty": "Please enter or choose a value",
+    "range_min": "Minimum {{min}}",
+    "range_both": "Range {{min}} – {{max}}"
   }
 }
