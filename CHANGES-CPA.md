@@ -60,6 +60,44 @@ const HIDE_NAV_ITEMS = { quickStart: true, plugins: true, pluginStore: true } as
 - `loginForm` 测试的品牌名断言改为 `CPA`。
 - 结果：`type-check` ✅、`lint` ✅、`bun test` 1870 通过 / 0 失败、`build` ✅。
 
+### 6. 代理出口检测（OAuth 登录前 + 编辑代理保存前）
+
+目的：CPA 后端遇到**格式写错**的代理地址时，不报错而是静默退回直连。面板在把代理交给后端之前先测一次，测不过就不让用。
+
+**检测方法**（`src/features/oauth/proxyEgressCheck.ts`）：经 CPA 的 `/v8/management/requests/api-call` 访问 `https://ipinfo.io/json` 两次，都**不带** `auth_index`：
+
+1. 不带代理 → 得到 CPA 服务器本机出口 IP（基准）；
+2. 带代理 → 得到代理出口 IP。
+
+以下任一情况都拦截：
+
+| 原因 | 说明 |
+|---|---|
+| `invalid` | 地址格式不对。只接受 `socks5://` / `socks5h://` + 主机 + 端口(1–65535)，不允许路径/参数，与 New API `ValidateSocksProxyURL` 同口径。不发任何请求 |
+| `baseline_failed` | 拿不到本机 IP，无法对比 |
+| `unreachable` | 走代理请求失败（含 CPA 返回 502、代理返回 407 等） |
+| `bad_response` | 返回内容里没有 IP |
+| `same_ip` | 两次 IP 相同 = 代理没生效、实际直连了 |
+
+单次请求超时 20 秒。
+
+**接入点：**
+
+| 文件 | 改动 |
+|---|---|
+| `src/features/oauth/OAuthPage.tsx` | 点「开始」时：填了代理先检测，通过才 `startAuth`；留空照旧直接开始。改代理会作废上一次的检测结果 |
+| `src/features/oauth/components/OAuthFlowDialog.tsx` | 显示「检测中 / 通过（出口 IP + 地区）/ 失败原因」；检测中禁用开始按钮 |
+| `src/features/authFiles/hooks/useAuthFilesPrefixProxyEditor.ts` | 保存前若 `proxy_url` 非空先检测，失败提示「代理未保存」并中止；清空代理不拦截 |
+| 7 个语言文件 | 新增 `auth_login.proxy_check_*` 共 8 个键 |
+| `tests/proxyEgressCheck.test.ts` | 8 个测试覆盖上表全部分支 |
+
+**限制：**
+
+- 依赖 `ipinfo.io` 可访问；它不可用时会误拦（宁可拦错，不放过）。
+- 每次检测会让 CPA 服务器本机直连 `ipinfo.io` 一次（拿基准 IP），只暴露给 ipinfo，与 Anthropic 无关。
+- 只防面板操作。直接改凭证文件或直接调后端接口改 `proxy_url`，不经过这个检测。
+- 结果：`type-check` ✅、`lint` ✅、`bun test` 1878 通过 / 0 失败、`build` ✅。
+
 ---
 
 ## 二、安装

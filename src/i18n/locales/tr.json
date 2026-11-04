@@ -981,7 +981,15 @@
     "proxy_placeholder": "socks5h://host:port (isteğe bağlı; boş bırakılırsa doğrudan bağlantı)",
     "proxy_hint": "Doldurulursa yetkilendirme, token değişimi, sonraki istekler ve yenilemeler bu proxy'yi kullanır; boşsa tümü doğrudan bağlanır. Yalnızca tarayıcıda proxy kullanıp burayı boş bırakmayın.",
     "proxy_in_use": "Bu giriş baştan sona proxy kullanıyor: {{proxy}}",
-    "proxy_direct": "Bu giriş için proxy yok: baştan sona doğrudan bağlantı"
+    "proxy_direct": "Bu giriş için proxy yok: baştan sona doğrudan bağlantı",
+    "proxy_check_checking": "Proxy çıkış IP’si kontrol ediliyor…",
+    "proxy_check_passed": "Proxy kontrolü geçti: çıkış IP {{ip}} ({{location}})",
+    "proxy_check_invalid": "Geçersiz proxy: yalnızca host ve port (1-65535) içeren socks5:// veya socks5h://, örn. socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "CPA sunucusunun kendi çıkış IP’si alınamadı, proxy doğrulanamıyor. Engellendi. ({{detail}})",
+    "proxy_check_unreachable": "Proxy’ye ulaşılamıyor: bu proxy üzerinden istek başarısız. Engellendi. ({{detail}})",
+    "proxy_check_bad_response": "IP yankı servisi beklenmeyen yanıt döndü; çıkış IP bilinmiyor. Engellendi.",
+    "proxy_check_same_ip": "Proxy etkin değil: çıkış IP ({{detail}}) CPA sunucusunun kendi IP’siyle aynı, trafik doğrudan. Engellendi.",
+    "proxy_check_save_blocked": "Proxy kaydedilmedi:"
   },
   "stats": {
     "success": "Başarılı",

@@ -981,7 +981,15 @@
     "proxy_placeholder": "socks5h://host:port (선택 사항, 비우면 전체 직접 연결)",
     "proxy_hint": "입력하면 인증, 토큰 교환, 이후 요청과 갱신이 모두 이 프록시를 사용합니다. 비우면 모두 직접 연결됩니다. 브라우저만 프록시를 쓰고 여기를 비워 두지 마세요.",
     "proxy_in_use": "이번 로그인은 전체 프록시 사용: {{proxy}}",
-    "proxy_direct": "이번 로그인은 프록시 없음: 전체 직접 연결"
+    "proxy_direct": "이번 로그인은 프록시 없음: 전체 직접 연결",
+    "proxy_check_checking": "프록시 출구 IP 확인 중…",
+    "proxy_check_passed": "프록시 확인 통과: 출구 IP {{ip}} ({{location}})",
+    "proxy_check_invalid": "잘못된 프록시: socks5:// 또는 socks5h:// 와 호스트·포트(1-65535)만 허용, 예: socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "CPA 서버 자체 출구 IP를 가져올 수 없어 프록시를 확인할 수 없습니다. 차단됨. ({{detail}})",
+    "proxy_check_unreachable": "프록시 연결 불가: 이 프록시를 통한 요청 실패. 차단됨. ({{detail}})",
+    "proxy_check_bad_response": "IP 에코 서비스 응답이 비정상이라 출구 IP를 알 수 없습니다. 차단됨.",
+    "proxy_check_same_ip": "프록시 미적용: 출구 IP({{detail}})가 CPA 서버 자체 IP와 같아 실제로는 직접 연결입니다. 차단됨.",
+    "proxy_check_save_blocked": "프록시 저장 안 됨:"
   },
   "stats": {
     "success": "성공",

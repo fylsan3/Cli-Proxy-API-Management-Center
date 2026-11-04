@@ -28,6 +28,12 @@ export function DialogTitle({ title, caption, icon }: DialogHeading) {
   );
 }
 
+/** 二开 #27：代理出口检测状态。 */
+export type ProxyCheckView =
+  | { status: 'checking' }
+  | { status: 'passed'; ip: string; location: string }
+  | { status: 'failed'; message: string };
+
 export interface OAuthFlowDialogProps {
   open: boolean;
   providerId: string;
@@ -42,6 +48,8 @@ export interface OAuthFlowDialogProps {
   /** 二开：会话代理草稿（非必填，留空 = 全程直连）。 */
   proxy: string;
   onProxyChange: (value: string) => void;
+  /** 二开 #27：填了代理时，开始前的出口检测结果。 */
+  proxyCheck?: ProxyCheckView;
   /** 二开：成功页「再登录一个账号」→ 回到填代理的初始页，而不是直接开始。 */
   onLoginAnother: () => void;
   onCancel: () => void;
@@ -117,8 +125,16 @@ function FlowBody(props: OAuthFlowDialogProps & { view: Exclude<FlowView, 'succe
           }}
         >
           <ProxyField value={props.proxy} onChange={props.onProxyChange} />
+          <ProxyCheckNotice check={props.proxyCheck} />
           <div>
-            <button type="submit" className={styles.primary}>
+            <button
+              type="submit"
+              className={styles.primary}
+              disabled={props.proxyCheck?.status === 'checking'}
+            >
+              {props.proxyCheck?.status === 'checking' && (
+                <IconLoader2 size={14} className={styles.spinning} aria-hidden="true" />
+              )}
               {view === 'failed' ? t('auth_login.restart_login') : text('oauth_button')}
             </button>
           </div>
@@ -145,6 +161,9 @@ function FlowBody(props: OAuthFlowDialogProps & { view: Exclude<FlowView, 'succe
           ? t('auth_login.proxy_in_use', { proxy: state.proxyUrl })
           : t('auth_login.proxy_direct')}
       </p>
+      {props.proxyCheck?.status === 'passed' && state.proxyUrl && (
+        <ProxyCheckNotice check={props.proxyCheck} />
+      )}
       <ol className={styles.steps}>
         <OpenStep {...props} />
         {state.userCode && (
@@ -196,6 +215,34 @@ function ProxyField({ value, onChange }: { value: string; onChange: (value: stri
       <p className={styles.stepHint} id={hintId}>
         {t('auth_login.proxy_hint')}
       </p>
+    </div>
+  );
+}
+
+/** 二开 #27：检测中 / 通过（出口 IP）/ 失败（原因）。未检测时不渲染。 */
+function ProxyCheckNotice({ check }: { check?: ProxyCheckView }) {
+  const { t } = useTranslation();
+  if (!check) return null;
+  if (check.status === 'checking') {
+    return (
+      <p className={styles.stepHint} role="status">
+        {t('auth_login.proxy_check_checking')}
+      </p>
+    );
+  }
+  if (check.status === 'passed') {
+    return (
+      <p className={styles.feedbackSuccess} role="status">
+        {t('auth_login.proxy_check_passed', {
+          ip: check.ip,
+          location: check.location || '-',
+        })}
+      </p>
+    );
+  }
+  return (
+    <div className={styles.alert} role="alert">
+      {check.message}
     </div>
   );
 }

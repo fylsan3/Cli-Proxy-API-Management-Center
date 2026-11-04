@@ -981,7 +981,15 @@
     "proxy_placeholder": "socks5h://host:port (optional; leave empty for direct connection)",
     "proxy_hint": "If set, authorization, token exchange, later requests and refreshes all use this proxy; if empty, everything connects directly. Avoid using a proxy in the browser while leaving this empty.",
     "proxy_in_use": "This login uses proxy end-to-end: {{proxy}}",
-    "proxy_direct": "No proxy for this login: direct connection end-to-end"
+    "proxy_direct": "No proxy for this login: direct connection end-to-end",
+    "proxy_check_checking": "Checking proxy egress IP…",
+    "proxy_check_passed": "Proxy check passed: egress IP {{ip}} ({{location}})",
+    "proxy_check_invalid": "Invalid proxy: only socks5:// or socks5h:// with host and port (1-65535), e.g. socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "Could not get the CPA server’s own egress IP, so the proxy cannot be verified. Blocked. ({{detail}})",
+    "proxy_check_unreachable": "Proxy unreachable: request through this proxy failed. Blocked. ({{detail}})",
+    "proxy_check_bad_response": "IP echo service returned an unexpected response; egress IP unknown. Blocked.",
+    "proxy_check_same_ip": "Proxy not in effect: egress IP ({{detail}}) equals the CPA server’s own IP, so traffic is direct. Blocked.",
+    "proxy_check_save_blocked": "Proxy not saved:"
   },
   "stats": {
     "success": "Success",

@@ -1008,7 +1008,15 @@
     "proxy_placeholder": "socks5h://host:port（可留空，留空則全程直連）",
     "proxy_hint": "填了：授權、兌換、後續呼叫和刷新全程走這條代理；留空：全程直連。只要別「瀏覽器走代理、這裡留空」就是一致的。",
     "proxy_in_use": "本次登入全程走代理：{{proxy}}",
-    "proxy_direct": "本次登入未填代理：全程直連"
+    "proxy_direct": "本次登入未填代理：全程直連",
+    "proxy_check_checking": "正在檢測代理出口 IP…",
+    "proxy_check_passed": "代理檢測通過：出口 IP {{ip}}（{{location}}）",
+    "proxy_check_invalid": "代理格式不對：只接受 socks5:// 或 socks5h://，必須寫主機和埠（1–65535），例如 socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "無法取得 CPA 伺服器本機出口 IP，不能確認代理是否生效，已攔截。（{{detail}}）",
+    "proxy_check_unreachable": "代理不通：走這條代理存取失敗，已攔截。（{{detail}}）",
+    "proxy_check_bad_response": "IP 回顯服務回傳內容異常，無法確認出口 IP，已攔截。",
+    "proxy_check_same_ip": "代理沒生效：出口 IP（{{detail}}）與 CPA 伺服器本機相同，表示請求實際是直連，已攔截。",
+    "proxy_check_save_blocked": "代理未儲存："
   },
   "stats": {
     "success": "成功",

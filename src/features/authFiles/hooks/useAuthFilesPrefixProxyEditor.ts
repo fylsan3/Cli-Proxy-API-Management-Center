@@ -11,6 +11,7 @@ import { useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { apiClient, authFilesApi, type AuthFileFieldsPatch } from '@/services/api';
 import { notifyAuthFilesChanged } from '@/features/authFiles/authFilesEvents';
+import { checkProxyEgress, proxyCheckFailureKey } from '@/features/oauth/proxyEgressCheck';
 import type { AuthFileItem } from '@/types';
 import { useNotificationStore } from '@/stores';
 import {
@@ -756,6 +757,30 @@ export function useAuthFilesPrefixProxyEditor(
     });
 
     try {
+      // 二开 #27：改成了新代理 → 先测出口 IP，通过才保存。CPA 的 PATCH 不校验代理，
+      // 写错的地址会让账号静默直连。清空代理（改回直连）不在此拦截。
+      const nextProxy = payload.proxy_url?.trim();
+      if (nextProxy) {
+        const check = await checkProxyEgress(nextProxy);
+        if (!isCurrentEditor()) return;
+        if (!check.ok) {
+          showNotification(
+            `${t('auth_login.proxy_check_save_blocked')} ${t(proxyCheckFailureKey(check.reason), {
+              detail: check.detail ?? '',
+            })}`,
+            'error'
+          );
+          setPrefixProxyEditor((prev) => {
+            if (!prev || prev.fileName !== name) return prev;
+            return { ...prev, saving: false };
+          });
+          return;
+        }
+        showNotification(
+          t('auth_login.proxy_check_passed', { ip: check.ip, location: check.location || '-' }),
+          'success'
+        );
+      }
       await authFilesApi.patchFields(name, payload);
       if (!isCurrentEditor()) return;
       onFilesMutated?.([name]);

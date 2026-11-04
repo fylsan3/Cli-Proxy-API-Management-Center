@@ -18,6 +18,8 @@ import {
   type ProviderFlowState,
 } from './hooks/useOAuthFlows';
 import { useVertexImport } from './hooks/useVertexImport';
+import { checkProxyEgress, proxyCheckFailureKey } from './proxyEgressCheck';
+import type { ProxyCheckView } from './components/OAuthFlowDialog';
 import {
   isSponsor,
   OAUTH_PROVIDERS,
@@ -59,8 +61,47 @@ export function OAuthPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   // 二开：每个提供商一份代理草稿（非必填）。仅存在内存，不落 localStorage。
   const [proxyDrafts, setProxyDrafts] = useState<Record<string, string>>({});
-  const setProxyDraft = (provider: string, value: string) =>
+  // 二开 #27：每个提供商一份代理检测结果；改了代理就清掉，避免拿旧结果放行。
+  const [proxyChecks, setProxyChecks] = useState<Record<string, ProxyCheckView>>({});
+  const checkSeq = useRef<Record<string, number>>({});
+  const setProxyCheck = (provider: string, view: ProxyCheckView | undefined) =>
+    setProxyChecks((prev) => {
+      const next = { ...prev };
+      if (view) next[provider] = view;
+      else delete next[provider];
+      return next;
+    });
+  const setProxyDraft = (provider: string, value: string) => {
     setProxyDrafts((prev) => ({ ...prev, [provider]: value }));
+    checkSeq.current[provider] = (checkSeq.current[provider] ?? 0) + 1;
+    setProxyCheck(provider, undefined);
+  };
+
+  /**
+   * 二开 #27：填了代理就先测出口 IP，通过才创建登录会话；留空维持原行为（全程直连）。
+   */
+  const startWithProxyCheck = async (provider: string) => {
+    const proxy = (proxyDrafts[provider] ?? '').trim();
+    if (!proxy) {
+      setProxyCheck(provider, undefined);
+      void flows.startAuth(provider, undefined);
+      return;
+    }
+    const seq = (checkSeq.current[provider] ?? 0) + 1;
+    checkSeq.current[provider] = seq;
+    setProxyCheck(provider, { status: 'checking' });
+    const result = await checkProxyEgress(proxy);
+    if (checkSeq.current[provider] !== seq) return; // 期间改了代理或重新检测
+    if (!result.ok) {
+      setProxyCheck(provider, {
+        status: 'failed',
+        message: t(proxyCheckFailureKey(result.reason), { detail: result.detail ?? '' }),
+      });
+      return;
+    }
+    setProxyCheck(provider, { status: 'passed', ip: result.ip, location: result.location });
+    void flows.startAuth(provider, proxy);
+  };
   const [siwcOpen, setSiwcOpen] = useState(false);
   // 每次打开换新 key 重新挂载（全新选择与会话）；关闭后保持挂载，让退出动画走完
   const [siwcKey, setSiwcKey] = useState(0);
@@ -237,8 +278,9 @@ export function OAuthPage() {
           text={(suffix) => flows.providerText(dialogCard.id, suffix)}
           supportsCallback={supportsManualCallback(dialogCard)}
           sponsor={sponsorOf(dialogCard)}
-          onStart={() => void flows.startAuth(dialogCard.id, proxyDrafts[dialogCard.id])}
+          onStart={() => void startWithProxyCheck(dialogCard.id)}
           proxy={proxyDrafts[dialogCard.id] ?? ''}
+          proxyCheck={proxyChecks[dialogCard.id]}
           onProxyChange={(value) => setProxyDraft(dialogCard.id, value)}
           onLoginAnother={() => {
             // 换账号 = 换出口：回到填代理的初始页，并清空上一个账号的代理

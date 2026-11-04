@@ -980,7 +980,15 @@
     "proxy_placeholder": "socks5h://host:port（可留空，留空则全程直连）",
     "proxy_hint": "填了：授权、兑换、后续调用和刷新全程走这条代理；留空：全程直连。只要别「浏览器走代理、这里留空」就是一致的。",
     "proxy_in_use": "本次登录全程走代理：{{proxy}}",
-    "proxy_direct": "本次登录未填代理：全程直连"
+    "proxy_direct": "本次登录未填代理：全程直连",
+    "proxy_check_checking": "正在检测代理出口 IP…",
+    "proxy_check_passed": "代理检测通过：出口 IP {{ip}}（{{location}}）",
+    "proxy_check_invalid": "代理格式不对：只接受 socks5:// 或 socks5h://，必须写主机和端口（1–65535），例如 socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "无法获取 CPA 服务器本机出口 IP，不能确认代理是否生效，已拦截。（{{detail}}）",
+    "proxy_check_unreachable": "代理不通：走这条代理访问失败，已拦截。（{{detail}}）",
+    "proxy_check_bad_response": "IP 回显服务返回内容异常，无法确认出口 IP，已拦截。",
+    "proxy_check_same_ip": "代理没生效：出口 IP（{{detail}}）与 CPA 服务器本机相同，说明请求实际是直连，已拦截。",
+    "proxy_check_save_blocked": "代理未保存："
   },
   "stats": {
     "success": "成功",

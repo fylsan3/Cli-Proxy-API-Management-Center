@@ -937,7 +937,15 @@
     "proxy_placeholder": "socks5h://host:port (tùy chọn; để trống = kết nối trực tiếp)",
     "proxy_hint": "Nếu điền, ủy quyền, đổi token, các yêu cầu sau và làm mới đều đi qua proxy này; để trống thì tất cả kết nối trực tiếp. Đừng chỉ dùng proxy ở trình duyệt mà để trống ô này.",
     "proxy_in_use": "Lần đăng nhập này dùng proxy toàn trình: {{proxy}}",
-    "proxy_direct": "Lần đăng nhập này không có proxy: kết nối trực tiếp toàn trình"
+    "proxy_direct": "Lần đăng nhập này không có proxy: kết nối trực tiếp toàn trình",
+    "proxy_check_checking": "Đang kiểm tra IP đầu ra của proxy…",
+    "proxy_check_passed": "Kiểm tra proxy đạt: IP đầu ra {{ip}} ({{location}})",
+    "proxy_check_invalid": "Proxy không hợp lệ: chỉ nhận socks5:// hoặc socks5h:// có host và cổng (1-65535), ví dụ socks5h://user:pass@1.2.3.4:1080",
+    "proxy_check_baseline_failed": "Không lấy được IP đầu ra của máy chủ CPA nên không xác minh được proxy. Đã chặn. ({{detail}})",
+    "proxy_check_unreachable": "Proxy không kết nối được: yêu cầu qua proxy thất bại. Đã chặn. ({{detail}})",
+    "proxy_check_bad_response": "Dịch vụ trả IP phản hồi bất thường, không xác định được IP đầu ra. Đã chặn.",
+    "proxy_check_same_ip": "Proxy không có hiệu lực: IP đầu ra ({{detail}}) trùng IP máy chủ CPA, tức là kết nối trực tiếp. Đã chặn.",
+    "proxy_check_save_blocked": "Chưa lưu proxy:"
   },
   "stats": {
     "success": "Thành công",
