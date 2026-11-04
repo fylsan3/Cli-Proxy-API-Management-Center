@@ -110,6 +110,7 @@
     "plugins": "插件管理",
     "plugin_store": "插件商店",
     "config_management": "配置面板",
+    "recommended_config": "推荐参数",
     "logs": "日志查看",
     "system_info": "模型信息"
   },
@@ -132,6 +133,7 @@
     "plugin_store": "发现并安装插件",
     "logs": "请求追踪与排查",
     "config_management": "网关基础配置",
+    "recommended_config": "一键优化后端参数",
     "system_info": "可用模型列表"
   },
   "dashboard": {
@@ -2435,5 +2437,127 @@
     "error": "绑定失败，请重新开始。",
     "unsupported": "当前后端不支持 SIWC 绑定。",
     "expired": "绑定会话已过期，请重新开始。"
+  },
+  "recommended_config": {
+    "title": "推荐参数",
+    "subtitle": "检查 CPA 后端参数，一键改成推荐值。只修改你勾选的项，修改前自动备份。",
+    "recheck": "重新检查",
+    "load_failed": "读取配置失败",
+    "summary_pending": "有 {{count}} 项参数和推荐值不一致",
+    "summary_ok": "全部参数都已是推荐值",
+    "filter_all": "全部",
+    "filter_pending": "只看待优化",
+    "select_all_pending": "全选待优化",
+    "clear_selection": "清空",
+    "group_a": "A 组 · 推荐",
+    "group_a_hint": "默认勾选",
+    "group_b": "B 组 · 可选",
+    "group_b_hint": "默认不勾，按需开启",
+    "group_c": "C 组 · 安全检查",
+    "group_c_hint": "只检查，不修改",
+    "group_all_ok": "这一组都已是推荐值",
+    "status_ok": "已是推荐值",
+    "status_pending": "待优化",
+    "current": "当前",
+    "recommended": "推荐",
+    "not_set": "未设置（默认 {{value}}）",
+    "apply_one": "只应用这一项",
+    "preview": "预览修改",
+    "apply_n": "应用 {{count}} 项",
+    "backup_at": "上次备份：{{time}}",
+    "backup_none": "还没有备份，应用时会自动备份当前配置",
+    "download": "下载",
+    "restore": "还原",
+    "confirm_title": "确认修改 {{count}} 项参数",
+    "confirm_note": "修改前会自动备份当前 config.yaml，可在页面底部下载或一键还原。CPA 会自动热加载，无需重启。",
+    "cancel": "取消",
+    "confirm": "确认修改",
+    "apply_success": "已应用 {{count}} 项，并已备份原配置",
+    "apply_failed": "应用失败",
+    "restore_success": "已还原到应用前的参数",
+    "restore_failed": "还原失败",
+    "pending_badge": "{{count}} 项待优化",
+    "rules": {
+      "disable_auto_update_panel": {
+        "title": "关闭面板自动更新",
+        "desc": "防止 CPA 从官方仓库下载面板，覆盖掉二开面板。"
+      },
+      "disable_control_panel": {
+        "title": "保持管理面板开启",
+        "desc": "设为 true 会关掉面板入口，本页也就打不开了。"
+      },
+      "session_affinity": {
+        "title": "会话粘性",
+        "desc": "同一个对话固定走同一个账号，提高缓存命中，也更像真人使用。"
+      },
+      "session_affinity_ttl": {
+        "title": "会话粘性保持时长",
+        "desc": "一个对话绑定账号后保持多久，推荐 1 小时。"
+      },
+      "session_affinity_rebind_on": {
+        "title": "账号出错时换绑",
+        "desc": "绑定的账号出错（限额、失效等）时，自动换到其他账号。"
+      },
+      "usage_statistics_enabled": {
+        "title": "用量统计",
+        "desc": "记录每个账号的用量，New API 订阅账号页面需要用到。"
+      },
+      "usage_queue_retention": {
+        "title": "用量记录保留时长（秒）",
+        "desc": "用量明细在内存里保留多久，1800 秒 = 30 分钟，最大 3600。"
+      },
+      "tls_handshake_timeout": {
+        "title": "TLS 握手超时（秒）",
+        "desc": "代理卡在握手阶段时 15 秒后放弃并重试，避免请求一直挂着。只限握手，不限制长对话。"
+      },
+      "claude_model_level_cooling": {
+        "title": "Claude 按模型冷却",
+        "desc": "某个模型达到限额时，只暂停这个模型，账号的其他模型还能继续用。"
+      },
+      "streaming_keepalive": {
+        "title": "流式心跳（秒）",
+        "desc": "长时间没输出时每 15 秒发一次心跳，防止中间网络断开连接。"
+      },
+      "streaming_bootstrap_retries": {
+        "title": "流式首包重试次数",
+        "desc": "还没开始输出内容前失败，自动重试 1 次，对客户端无感。"
+      },
+      "logs_max_total_size": {
+        "title": "日志总大小上限（MB）",
+        "desc": "日志超过 500MB 自动删最旧的，防止磁盘被写满。"
+      }
+    },
+    "safety": {
+      "secret_key": {
+        "title": "管理密钥",
+        "ok": "已设置",
+        "tip": "管理密钥为空，管理接口会被关闭。请在配置面板里设置。"
+      },
+      "proxy_url": {
+        "title": "全局代理保持为空",
+        "ok": "未设置全局代理，每个账号走自己的代理",
+        "tip": "检测到全局代理 {{value}}。没有单独代理的账号都会走它，请确认是否需要。"
+      },
+      "server_host": {
+        "title": "监听地址",
+        "ok": "只监听本机（{{value}}），适合 frp 转发",
+        "tip": "当前监听 {{value}}。走 frp 时建议改为 127.0.0.1，避免对外暴露。"
+      },
+      "request_log": {
+        "title": "请求日志",
+        "ok": "已关闭",
+        "tip": "请求日志已开启，会把对话内容写入磁盘，建议排查完问题后关闭。"
+      },
+      "debug": {
+        "title": "调试日志",
+        "ok": "已关闭",
+        "tip": "调试日志已开启，日志量很大，建议关闭。"
+      },
+      "pprof": {
+        "title": "性能分析接口（pprof）",
+        "ok": "已关闭",
+        "tip": "pprof 已开启，建议关闭。"
+      }
+    }
   }
 }

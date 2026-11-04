@@ -110,6 +110,7 @@
     "plugins": "Плагины",
     "plugin_store": "Магазин плагинов",
     "config_management": "Панель конфигурации",
+    "recommended_config": "Рекомендуемые",
     "logs": "Просмотр логов",
     "system_info": "Информация о моделях"
   },
@@ -131,6 +132,7 @@
     "plugin_store": "Поиск и установка плагинов",
     "logs": "Трассировка запросов",
     "config_management": "Базовая конфигурация шлюза",
+    "recommended_config": "Оптимизация параметров в один клик",
     "system_info": "Доступные модели"
   },
   "dashboard": {
@@ -2430,5 +2432,127 @@
     "error": "Привязка не удалась. Начните заново.",
     "unsupported": "Этот сервер не поддерживает привязку SIWC.",
     "expired": "Сеанс привязки истёк. Начните заново."
+  },
+  "recommended_config": {
+    "title": "Recommended Settings",
+    "subtitle": "Check CPA backend settings and apply recommended values. Only selected items change; the current config is backed up first.",
+    "recheck": "Re-check",
+    "load_failed": "Failed to read configuration",
+    "summary_pending": "{{count}} setting(s) differ from the recommended values",
+    "summary_ok": "All settings already match the recommended values",
+    "filter_all": "All",
+    "filter_pending": "Pending only",
+    "select_all_pending": "Select all pending",
+    "clear_selection": "Clear",
+    "group_a": "Group A · Recommended",
+    "group_a_hint": "Selected by default",
+    "group_b": "Group B · Optional",
+    "group_b_hint": "Not selected by default",
+    "group_c": "Group C · Safety checks",
+    "group_c_hint": "Check only, never modified",
+    "group_all_ok": "Everything in this group is already recommended",
+    "status_ok": "Recommended",
+    "status_pending": "Pending",
+    "current": "Current",
+    "recommended": "Recommended",
+    "not_set": "Not set (default {{value}})",
+    "apply_one": "Apply this only",
+    "preview": "Preview changes",
+    "apply_n": "Apply {{count}}",
+    "backup_at": "Last backup: {{time}}",
+    "backup_none": "No backup yet; the current config is backed up automatically when applying",
+    "download": "Download",
+    "restore": "Restore",
+    "confirm_title": "Confirm {{count}} change(s)",
+    "confirm_note": "The current config.yaml is backed up first; download or restore it from the bottom bar. CPA hot-reloads, no restart needed.",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "apply_success": "Applied {{count}} setting(s); original config backed up",
+    "apply_failed": "Apply failed",
+    "restore_success": "Restored the previous values",
+    "restore_failed": "Restore failed",
+    "pending_badge": "{{count}} pending",
+    "rules": {
+      "disable_auto_update_panel": {
+        "title": "Disable panel auto-update",
+        "desc": "Prevents CPA from overwriting this customized panel with the official one."
+      },
+      "disable_control_panel": {
+        "title": "Keep control panel enabled",
+        "desc": "true disables the panel entirely, including this page."
+      },
+      "session_affinity": {
+        "title": "Session affinity",
+        "desc": "Keeps one conversation on one account for better cache hits and more natural usage."
+      },
+      "session_affinity_ttl": {
+        "title": "Session affinity TTL",
+        "desc": "How long a conversation stays bound to an account. 1h recommended."
+      },
+      "session_affinity_rebind_on": {
+        "title": "Rebind on failure",
+        "desc": "Move the session to another account when the bound one fails."
+      },
+      "usage_statistics_enabled": {
+        "title": "Usage statistics",
+        "desc": "Track per-account usage; required by New API subscription accounts."
+      },
+      "usage_queue_retention": {
+        "title": "Usage retention (seconds)",
+        "desc": "How long usage records stay in memory. 1800 = 30 minutes, max 3600."
+      },
+      "tls_handshake_timeout": {
+        "title": "TLS handshake timeout (s)",
+        "desc": "Give up and retry when a proxy hangs during the TLS handshake. Long streams are not limited."
+      },
+      "claude_model_level_cooling": {
+        "title": "Claude per-model cooldown",
+        "desc": "When one model hits its quota, only that model is paused for the account."
+      },
+      "streaming_keepalive": {
+        "title": "Streaming keep-alive (s)",
+        "desc": "Send a heartbeat every 15s during silence so idle connections are not dropped."
+      },
+      "streaming_bootstrap_retries": {
+        "title": "Streaming bootstrap retries",
+        "desc": "Retry once if the request fails before any content is sent."
+      },
+      "logs_max_total_size": {
+        "title": "Max total log size (MB)",
+        "desc": "Delete the oldest logs beyond 500MB to avoid filling the disk."
+      }
+    },
+    "safety": {
+      "secret_key": {
+        "title": "Management key",
+        "ok": "Set",
+        "tip": "The management key is empty, so the management API is disabled."
+      },
+      "proxy_url": {
+        "title": "Global proxy stays empty",
+        "ok": "No global proxy; each account uses its own proxy",
+        "tip": "Global proxy {{value}} detected. Accounts without their own proxy will use it."
+      },
+      "server_host": {
+        "title": "Listen address",
+        "ok": "Loopback only ({{value}}), suitable for frp",
+        "tip": "Listening on {{value}}. With frp, 127.0.0.1 is recommended."
+      },
+      "request_log": {
+        "title": "Request log",
+        "ok": "Off",
+        "tip": "Request logging writes conversation content to disk; turn it off after debugging."
+      },
+      "debug": {
+        "title": "Debug log",
+        "ok": "Off",
+        "tip": "Debug logging is on and very verbose; turn it off."
+      },
+      "pprof": {
+        "title": "pprof",
+        "ok": "Off",
+        "tip": "pprof is enabled; turn it off."
+      }
+    }
   }
 }

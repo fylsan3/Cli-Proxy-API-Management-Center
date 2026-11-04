@@ -98,6 +98,40 @@ const HIDE_NAV_ITEMS = { quickStart: true, plugins: true, pluginStore: true } as
 - 只防面板操作。直接改凭证文件或直接调后端接口改 `proxy_url`，不经过这个检测。
 - 结果：`type-check` ✅、`lint` ✅、`bun test` 1878 通过 / 0 失败、`build` ✅。
 
+### 7. 推荐参数（一键应用）（2026-11-04 新增）
+
+侧边栏「控制 → 配置面板」下面新增「推荐参数」页面（路由 `/recommended-config`），菜单角标显示待优化项数。**只新增，不改原功能**。
+
+| 新增/改动 | 内容 |
+|---|---|
+| `src/features/recommendedConfig/rules.ts` | 参数规则、检查逻辑（纯函数） |
+| `src/features/recommendedConfig/useRecommendedConfig.ts` | 读取、应用、备份、还原 |
+| `src/features/recommendedConfig/RecommendedConfigPage.tsx` + `.module.scss` | 页面，复用面板自带的 Card / Button / Modal / SelectionCheckbox 和主题变量 |
+| `src/router/MainRoutes.tsx` | 加一条路由 |
+| `src/components/layout/MainLayout.tsx` | 加一个菜单项（带角标）和一个图标 |
+| 7 个语言文件 | 末尾追加 `recommended_config`，`nav` / `nav_meta` 各加一个键 |
+| `tests/recommendedConfig.test.ts` | 规则、补丁、还原、7 语言文案完整性测试 |
+
+参数分组：
+
+- **A 组（默认勾选）**：`management.disable-auto-update-panel=true`、`management.disable-control-panel=false`、`routing.session-affinity=true`、`routing.session-affinity-ttl=1h`、`routing.session-affinity-rebind-on=any`、`observability.usage.usage-statistics-enabled=true`、`observability.usage.redis-usage-queue-retention-seconds=1800`
+- **B 组（默认不勾）**：`requests.tls-handshake-timeout-seconds=15`、`upstream.claude.model-level-cooling=true`、`requests.streaming.keepalive-seconds=15`、`requests.streaming.bootstrap-retries=1`、`observability.logs.logs-max-total-size-mb=500`
+- **C 组（只检查，不修改）**：管理密钥不为空、全局 `requests.proxy-url` 为空、`server.host` 是否 127.0.0.1、请求日志 / debug / pprof 关闭。
+
+工作方式：
+
+1. 读 `GET /config`，未写入的字段按 CPA v8 官方默认值判断。
+2. 应用前先 `GET /config.yaml` 存一份备份（浏览器本地），并记录被改字段的原值。
+3. 只 `PATCH /config` 勾选的字段，其它配置一个不碰。
+4. 「还原」只把上次改过的字段改回原值（原本没写的字段删除），不覆盖整份文件；「下载」可拿到应用前完整的 config.yaml。
+
+已在本机 CPA v8.0.51 实测：
+
+- 12 个字段 PATCH 写入、回读一致，CPA 自动热加载，**不需要重启**。
+- Claude 按模型冷却在 v8 的实际路径是 `upstream.claude.model-level-cooling`（文档里的 `oauth.providers.claude` 写进去不生效）。
+- 本机浏览器实测：应用 1 项 → 角标 4 变 3、出现备份时间；点「还原」→ 字段被删除，配置回到原样。
+- 结果：`type-check` ✅、`lint` ✅、`bun test` 1884 通过 / 0 失败、`build` ✅。
+
 ---
 
 ## 二、安装

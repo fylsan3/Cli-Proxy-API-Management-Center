@@ -31,6 +31,7 @@ import {
   IconSidebarStore,
   IconSidebarSystem,
   IconChevronDown,
+  IconCheckCircle2,
 } from '@/components/ui/icons';
 import { INLINE_LOGO_JPEG } from '@/assets/logoInline';
 import {
@@ -50,6 +51,7 @@ import {
 } from '@/features/plugins/pluginResources';
 import { APIKEY_FUN_DISPLAY_NAME, hasApiKeyFunConfig } from '@/features/providers/sponsor';
 import { triggerHeaderRefresh } from '@/hooks/useHeaderRefresh';
+import { useRecommendedPendingCount } from '@/features/recommendedConfig/useRecommendedConfig';
 import { LANGUAGE_LABEL_KEYS, LANGUAGE_ORDER } from '@/utils/constants';
 import { isSupportedLanguage } from '@/utils/language';
 import { getSidebarShortcutLabel, isSidebarToggleShortcut } from '@/utils/sidebarShortcut';
@@ -68,6 +70,7 @@ const sidebarIcons: Record<string, ReactNode> = {
   config: <IconSidebarConfig size={18} />,
   logs: <IconSidebarLogs size={18} />,
   system: <IconSidebarSystem size={18} />,
+  recommendedConfig: <IconCheckCircle2 size={18} />, // 二开：推荐参数
 };
 
 // 二开：侧边栏隐藏项开关。改回 false 即恢复官方菜单（路由本身未删除）。
@@ -603,6 +606,7 @@ export function MainLayout() {
     icon: sidebarIcons.quickStart,
   };
 
+  const recommendedPendingCount = useRecommendedPendingCount(); // 二开
   const navGroups: SidebarNavGroup[] = [
     {
       id: 'operate',
@@ -680,6 +684,18 @@ export function MainLayout() {
           labelKey: 'nav.config_management',
           metaKey: 'nav_meta.config_management',
           icon: sidebarIcons.config,
+        },
+        // 二开：推荐参数（角标 = 待优化项数量）
+        {
+          path: '/recommended-config',
+          labelKey: 'nav.recommended_config',
+          metaKey: 'nav_meta.recommended_config',
+          badge: recommendedPendingCount,
+          badgeLabel:
+            typeof recommendedPendingCount === 'number'
+              ? t('recommended_config.pending_badge', { count: recommendedPendingCount })
+              : undefined,
+          icon: sidebarIcons.recommendedConfig,
         },
         ...(supportsPlugin && !HIDE_NAV_ITEMS.plugins
           ? [

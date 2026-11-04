@@ -110,6 +110,7 @@
     "plugins": "插件管理",
     "plugin_store": "插件商店",
     "config_management": "設定面板",
+    "recommended_config": "推薦參數",
     "logs": "記錄檢視",
     "system_info": "模型資訊"
   },
@@ -132,6 +133,7 @@
     "plugin_store": "探索並安裝插件",
     "logs": "請求追蹤與排查",
     "config_management": "閘道基礎設定",
+    "recommended_config": "一鍵優化後端參數",
     "system_info": "可用模型清單"
   },
   "dashboard": {
@@ -2463,5 +2465,127 @@
     "error": "綁定失敗，請重新開始。",
     "unsupported": "目前後端不支援 SIWC 綁定。",
     "expired": "綁定工作階段已過期，請重新開始。"
+  },
+  "recommended_config": {
+    "title": "推薦參數",
+    "subtitle": "檢查 CPA 後端參數，一鍵改成推薦值。只修改你勾選的項，修改前自動備份。",
+    "recheck": "重新檢查",
+    "load_failed": "讀取設定失敗",
+    "summary_pending": "有 {{count}} 項參數和推薦值不一致",
+    "summary_ok": "全部參數都已是推薦值",
+    "filter_all": "全部",
+    "filter_pending": "只看待優化",
+    "select_all_pending": "全選待優化",
+    "clear_selection": "清空",
+    "group_a": "A 組 · 推薦",
+    "group_a_hint": "預設勾選",
+    "group_b": "B 組 · 可選",
+    "group_b_hint": "預設不勾，按需開啟",
+    "group_c": "C 組 · 安全檢查",
+    "group_c_hint": "只檢查，不修改",
+    "group_all_ok": "這一組都已是推薦值",
+    "status_ok": "已是推薦值",
+    "status_pending": "待優化",
+    "current": "目前",
+    "recommended": "推薦",
+    "not_set": "未設定（預設 {{value}}）",
+    "apply_one": "只套用這一項",
+    "preview": "預覽修改",
+    "apply_n": "套用 {{count}} 項",
+    "backup_at": "上次備份：{{time}}",
+    "backup_none": "還沒有備份，套用時會自動備份目前設定",
+    "download": "下載",
+    "restore": "還原",
+    "confirm_title": "確認修改 {{count}} 項參數",
+    "confirm_note": "修改前會自動備份目前 config.yaml，可在頁面底部下載或一鍵還原。CPA 會自動熱加載，無需重啟。",
+    "cancel": "取消",
+    "confirm": "確認修改",
+    "apply_success": "已套用 {{count}} 項，並已備份原設定",
+    "apply_failed": "套用失敗",
+    "restore_success": "已還原到套用前的參數",
+    "restore_failed": "還原失敗",
+    "pending_badge": "{{count}} 項待優化",
+    "rules": {
+      "disable_auto_update_panel": {
+        "title": "關閉面板自動更新",
+        "desc": "防止 CPA 從官方倉庫下載面板，覆蓋掉二開面板。"
+      },
+      "disable_control_panel": {
+        "title": "保持管理面板開啟",
+        "desc": "設為 true 會關掉面板入口，本頁也就打不開了。"
+      },
+      "session_affinity": {
+        "title": "會話粘性",
+        "desc": "同一個對話固定走同一個帳號，提高快取命中，也更像真人使用。"
+      },
+      "session_affinity_ttl": {
+        "title": "會話粘性保持時長",
+        "desc": "一個對話綁定帳號後保持多久，推薦 1 小時。"
+      },
+      "session_affinity_rebind_on": {
+        "title": "帳號出錯時換綁",
+        "desc": "綁定的帳號出錯（限額、失效等）時，自動換到其他帳號。"
+      },
+      "usage_statistics_enabled": {
+        "title": "用量統計",
+        "desc": "記錄每個帳號的用量，New API 訂閱帳號頁面需要用到。"
+      },
+      "usage_queue_retention": {
+        "title": "用量記錄保留時長（秒）",
+        "desc": "用量明細在記憶體裡保留多久，1800 秒 = 30 分鐘，最大 3600。"
+      },
+      "tls_handshake_timeout": {
+        "title": "TLS 握手超時（秒）",
+        "desc": "代理卡在握手階段時 15 秒後放棄並重試，避免請求一直掛著。只限握手，不限制長對話。"
+      },
+      "claude_model_level_cooling": {
+        "title": "Claude 按模型冷卻",
+        "desc": "某個模型達到限額時，只暫停這個模型，帳號的其他模型還能繼續用。"
+      },
+      "streaming_keepalive": {
+        "title": "流式心跳（秒）",
+        "desc": "長時間沒輸出時每 15 秒發一次心跳，防止中間網絡斷開連接。"
+      },
+      "streaming_bootstrap_retries": {
+        "title": "流式首包重試次數",
+        "desc": "還沒開始輸出內容前失敗，自動重試 1 次，對客戶端無感。"
+      },
+      "logs_max_total_size": {
+        "title": "日誌總大小上限（MB）",
+        "desc": "日誌超過 500MB 自動刪最舊的，防止磁盤被寫滿。"
+      }
+    },
+    "safety": {
+      "secret_key": {
+        "title": "管理密鑰",
+        "ok": "已設定",
+        "tip": "管理密鑰為空，管理接口會被關閉。請在設定面板裡設定。"
+      },
+      "proxy_url": {
+        "title": "全局代理保持為空",
+        "ok": "未設定全局代理，每個帳號走自己的代理",
+        "tip": "檢測到全局代理 {{value}}。沒有單獨代理的帳號都會走它，請確認是否需要。"
+      },
+      "server_host": {
+        "title": "監聽地址",
+        "ok": "只監聽本機（{{value}}），適合 frp 轉發",
+        "tip": "目前監聽 {{value}}。走 frp 時建議改為 127.0.0.1，避免對外暴露。"
+      },
+      "request_log": {
+        "title": "請求日誌",
+        "ok": "已關閉",
+        "tip": "請求日誌已開啟，會把對話內容寫入磁盤，建議排查完問題後關閉。"
+      },
+      "debug": {
+        "title": "調試日誌",
+        "ok": "已關閉",
+        "tip": "調試日誌已開啟，日誌量很大，建議關閉。"
+      },
+      "pprof": {
+        "title": "性能分析接口（pprof）",
+        "ok": "已關閉",
+        "tip": "pprof 已開啟，建議關閉。"
+      }
+    }
   }
 }

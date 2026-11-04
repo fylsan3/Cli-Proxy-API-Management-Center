@@ -1,0 +1,362 @@
+/* 二开：推荐参数页面样式。只用主题变量，跟随面板明暗主题。 */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+  flex-wrap: wrap;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(26px, 3.2vw, 30px);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  margin: 6px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.btnInner {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+%banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid;
+}
+
+.summaryPending {
+  @extend %banner;
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+.summaryOk {
+  @extend %banner;
+  background: var(--success-badge-bg);
+  border-color: var(--success-badge-border);
+  color: var(--success-badge-text);
+}
+
+.alertError {
+  @extend %banner;
+  border-color: var(--error-color);
+  color: var(--error-color);
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.toolbarActions {
+  display: flex;
+  gap: 4px;
+}
+
+.segment {
+  display: inline-flex;
+  padding: 3px;
+  border-radius: 9px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+%segmentButton {
+  border: 0;
+  background: transparent;
+  padding: 5px 14px;
+  border-radius: 7px;
+  font-size: 13px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.segmentItem {
+  @extend %segmentButton;
+
+  &:hover {
+    color: var(--text-primary);
+  }
+}
+
+.segmentActive {
+  @extend %segmentButton;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.groupHint {
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.row,
+.safetyRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 4px;
+  border-top: 1px solid var(--border-color);
+
+  &:first-child {
+    border-top: 0;
+  }
+}
+
+.rowPending {
+  .rowTitle {
+    color: var(--text-primary);
+  }
+}
+
+.rowCheck {
+  flex: 0 0 22px;
+  display: flex;
+  justify-content: center;
+  padding-top: 1px;
+}
+
+.rowMain {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rowTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.path {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  word-break: break-all;
+}
+
+.desc {
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.rowValues {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  min-width: 150px;
+  font-size: 12.5px;
+}
+
+@media (max-width: 720px) {
+  .row {
+    flex-wrap: wrap;
+  }
+
+  .rowValues {
+    align-items: flex-start;
+    padding-left: 34px;
+  }
+}
+
+.valueLine {
+  display: flex;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.valueLabel {
+  color: var(--text-tertiary);
+}
+
+%mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.valueOk {
+  @extend %mono;
+  color: var(--text-primary);
+}
+
+.valueOld {
+  @extend %mono;
+  color: var(--warning-text);
+}
+
+.valueNew {
+  @extend %mono;
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+%badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 8px;
+  border-radius: 999px;
+  border: 1px solid;
+}
+
+.badgeOk {
+  @extend %badge;
+  background: var(--success-badge-bg);
+  border-color: var(--success-badge-border);
+  color: var(--success-badge-text);
+}
+
+.badgePending {
+  @extend %badge;
+  background: var(--warning-bg);
+  border-color: var(--warning-border);
+  color: var(--warning-text);
+}
+
+.okIcon {
+  color: var(--success-color);
+  display: inline-flex;
+}
+
+.warnIcon {
+  color: var(--warning-color);
+  display: inline-flex;
+}
+
+.infoIcon {
+  color: var(--primary-color);
+  display: inline-flex;
+}
+
+.empty {
+  padding: 8px 4px;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.actionBar {
+  position: sticky;
+  bottom: 12px;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow);
+}
+
+.backupInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+.applyActions {
+  display: flex;
+  gap: 8px;
+}
+
+.confirmList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.confirmRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+}
+
+.confirmName {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  min-width: 0;
+}
+
+.confirmDiff {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+  font-size: 13px;
+  color: var(--text-tertiary);
+}
+
+.diffOld {
+  @extend %mono;
+  color: var(--error-color);
+  text-decoration: line-through;
+}
+
+.diffNew {
+  @extend %mono;
+  color: var(--success-color);
+  font-weight: 600;
+}
+
+.confirmNote {
+  margin: 12px 0 0;
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
