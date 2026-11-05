@@ -140,6 +140,10 @@ const HIDE_NAV_ITEMS = { quickStart: true, plugins: true, pluginStore: true } as
 - 本机 CPA v8.0.51 实测：存盘字段 PATCH / 回读 / 落盘正确；浏览器实测编辑数字（5000 报超出范围、900 保存回读一致）、编辑开关、还原均正常。
 - 结果：`type-check` ✅、`lint` ✅、`bun test` 1886 通过 / 0 失败、`build` ✅。
 
+#### 7.2 分组标题去掉 A/B/C 字样（2026-11-05，`f14da5c`）
+
+- 分组标题由「A 组 / B 组 / C 组」改为「推荐 / 可选 / 安全检查」（7 种语言，英文 Recommended / Optional / Safety checks），上文所说 A / B / C 组即对应这三组。
+
 ---
 
 ## 二、安装

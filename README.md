@@ -1,162 +1,108 @@
-<div align="center">
+# CPA 管理面板 二开版
 
-<img src="./logo.jpg" alt="CLI Proxy API" width="144">
+基于官方 [Cli-Proxy-API-Management-Center](https://github.com/router-for-me/Cli-Proxy-API-Management-Center) **v1.27.2** 二次开发，分支 `feat/oauth-proxy-url`。
+配套后端：官方 CLIProxyAPI **v8.0.51**（程序原样未改，只换管理面板）。
 
-# CLI Proxy API Management Center
+原则：**只新增、不改原功能**。官方功能和用法不变，官方文档请看上游仓库。
 
-**Your proxy, at a glance. Your configuration, in control.**
-
-A lightweight Web UI for CLI Proxy API.<br>
-Manage providers, credentials, quotas, and logs — from a single HTML file.
-
-[![Backend: v8](https://img.shields.io/badge/Backend-v8-5865F2?style=flat-square)](https://github.com/router-for-me/CLIProxyAPI)
-[![Single-file build](https://img.shields.io/badge/Build-single_HTML-0F766E?style=flat-square)](#deployment)
-[![License: MIT](https://img.shields.io/badge/License-MIT-64748B?style=flat-square)](LICENSE)
-
-**English** · [简体中文](README_CN.md)
-
-[Get started](#quick-start) · [Features](#features) · [Development](#development) · [Releases](https://github.com/router-for-me/Cli-Proxy-API-Management-Center/releases)
-
-</div>
+- 最新版本：[v8.0.51-panel.f14da5c](https://github.com/fylsan3/Cli-Proxy-API-Management-Center/releases/tag/v8.0.51-panel.f14da5c)
+- 详细技术说明：[CHANGES-CPA.md](./CHANGES-CPA.md)
 
 ---
 
-## One place to manage your instance
+## 我新增 / 修改了什么
 
-From everyday configuration to troubleshooting, keep the essentials close at hand.
+### 1. 品牌改为 CPA
 
-| Configure | Connect | Observe |
-| --- | --- | --- |
-| Edit settings visually or in YAML, with a diff before saving. | Manage provider keys, auth files, and OAuth flows. | Check instance status, provider quotas, and request logs. |
+- 侧边栏缩写、浏览器标签页标题、登录页品牌名和欢迎语都改为「CPA」；侧边栏副标题改为「API 管理控制台」。
 
-**Single-file deployment** · **Responsive layout** · **Four UI languages**
+### 2. 精简菜单
 
-> [!IMPORTANT]
-> Requires **CLI Proxy API ≥ 8.0.0**; the latest v8 release is recommended. This repository is the management UI, not the proxy — it does not forward traffic. It uses the **v8 Management API** (`/v8/management`) and v8 configuration layout, with no v0 fallback. Plugin resources and custom extensions retain their backend-declared paths.
+- 隐藏「快速开始」「插件管理」「插件商店」三个菜单（只隐藏菜单，路由还在，可一键改回）。
+- 「中心信息」改为「模型信息」，只保留按厂商分组的可用模型列表。
 
-## Quick start
+### 3. OAuth 登录可填会话代理（非必填）
 
-The UI is bundled with [CLI Proxy API](https://github.com/router-for-me/CLIProxyAPI). No separate frontend deployment is needed for the standard setup.
+- 打开登录弹窗不再自动开始授权，先填（或留空）代理再点「开始」。
+- 填了代理：一个账号从授权、换 token、调用到刷新，**全程走同一个代理**；留空则全程直连。避免「授权直连、调用走代理」只配一半。
+- 授权过程中顶部显示「本次登录全程走代理：xxx」或「未填代理：全程直连」。
 
-1. Start your CLI Proxy API service.
-2. Open `http://<host>:<api_port>/management.html`.
-3. Enter your **management key** and connect.
+### 4. 代理出口检测（防代理写错静默直连）
 
-The API address is detected from the page URL and can be changed manually.
+CPA 后端遇到格式写错的代理会悄悄改成直连。面板在把代理交给后端前先测一次：
 
-> [!NOTE]
-> The **management key** signs you into this UI. Client keys in `access.api-keys` authorize requests to the proxy — they are not interchangeable.
+- **检测时机**：OAuth 登录点「开始」前、编辑账号代理点「保存」前。
+- **检测方法**：分别不走代理、走代理访问一次 `ipinfo.io`，对比两次出口 IP。
+- **拦截情况**：地址格式不对（只接受 `socks5://` / `socks5h://` + 主机 + 端口）、代理连不上、拿不到 IP、两次 IP 相同（代理没生效）。
+- 测不过：登录不开始、代理不保存，并显示原因。
 
-<details>
-<summary><strong>Connection settings & remote access</strong></summary>
+### 5. 系统参数页面（新增菜单）
 
-The UI accepts addresses such as `localhost:8317`, `https://example.com:8317`, or `http://example.com:8317/v8/management`; the management suffix is removed automatically.
+侧边栏「配置面板」下新增「系统参数」，菜单角标显示还有几项没按推荐设置。
 
-Management requests use `Authorization: Bearer <MANAGEMENT_KEY>`. Remote access may require `management.allow-remote: true` on the server. See the [backend documentation](https://github.com/router-for-me/CLIProxyAPI) for authentication rules and server-side limits.
+- **推荐**（默认勾选）：关闭面板自动更新、会话粘性（1 小时）、用量统计、用量记录保留 1800 秒、冷却状态存盘等。
+- **可选**（默认不勾）：TLS 握手超时、Claude 按模型冷却、流式保活、启动重试、日志总大小上限。
+- **安全检查**（只检查不修改）：管理密钥不为空、全局代理为空、监听地址、请求日志 / debug / pprof 是否关闭。
+- 一键应用勾选项，或每项单独「编辑」（开关 / 下拉 / 数字输入，带范围校验）。
+- 应用前自动备份完整 config.yaml，只修改勾选的字段，其他配置一个不碰；可一键还原、可下载备份。CPA 自动热加载，不需要重启。
 
-</details>
+### 6. 对官方原有代码的改动
 
-<details>
-<summary><strong>Upgrading from v7</strong></summary>
+其余均为新增文件：
 
-Upgrade the backend first and back up `config.yaml`. The backend returns the v8 configuration layout on reads; a successful v8 configuration write migrates the stored file. The editor only writes v8 fields:
-
-- `access.api-keys`: client keys for accessing the proxy.
-- Top-level `api-keys`: upstream provider groups.
-
-</details>
-
-## Features
-
-| Area | What you can do |
-| --- | --- |
-| **Dashboard** | See connection status, server version, build date, and model availability at a glance. |
-| **Configuration** | Edit common settings and client keys visually, or use the YAML editor with search, highlighting, and a save diff preview. |
-| **AI providers** | Configure Gemini, Codex, Claude, Vertex, and OpenAI-compatible providers; manage keys, headers, proxies, and model mappings. |
-| **Auth files & OAuth** | Upload, download, and organize credentials; connect supported providers with OAuth or device flows; manage model aliases and exclusions. |
-| **Quotas** | Inspect quota and usage information for supported providers, including Claude, Antigravity, Codex, Kimi, and xAI/Grok. |
-| **Logs** | Follow logs with auto-refresh, search, hide management traffic, and download request error logs. |
-| **Plugins** | Access plugin management when the connected backend advertises support. |
-| **System** | Check for updates, inspect available models, and clear local login data. |
-
-Supports **English, 简体中文, 繁體中文, and Русский**, with browser-language detection and a manual language switch. Responsive layouts support desktop, tablet, and mobile use in modern Chrome, Firefox, Safari, and Edge.
-
-## Deployment
-
-To build your own single-file UI, use **Bun 1.4.3**:
-
-```bash
-bun install --frozen-lockfile
-bun run build
-```
-
-The output is **`dist/index.html`**, with JavaScript, CSS, and bundled assets inlined. The release workflow renames it to `management.html` for backend hosting.
-
-Use `bun run preview` to preview locally. Prefer an HTTP server over opening the file via `file://`, which can encounter browser CORS restrictions.
-
-<details>
-<summary><strong>Release details</strong></summary>
-
-- Tags matching `vX.Y.Z` trigger [the release workflow](.github/workflows/release.yml).
-- The UI version is injected at build time from `VERSION`, then git tags, then the package version, with `dev` as the final fallback.
-- Hash routing and an ES2020 build target keep deployment simple.
-
-</details>
-
-## Development
-
-```bash
-bun install --frozen-lockfile
-bun run dev
-```
-
-Open `http://localhost:5173` and connect to your backend instance.
-
-**Built with** React 19 · TypeScript 6 · Vite 8 · Zustand · Axios · React Router 7 · Motion · CodeMirror 6 · SCSS Modules · i18next.
-
-| Command | Purpose |
-| --- | --- |
-| `bun run dev` | Start the Vite dev server |
-| `bun run build` | TypeScript compilation + production build |
-| `bun run preview` | Serve the build locally |
-| `bun run test` | Run Bun tests |
-| `bun run lint` | Run ESLint; warnings are not treated as failures |
-| `bun run type-check` | Run `tsc --noEmit` |
-| `bun run verify` | Run tests, lint, and build |
-| `bun run format` | Format source files with Prettier |
-
-Issues and PRs are welcome. Include reproduction steps, backend and UI versions, screenshots for UI changes, and verification results. See [AGENTS.md](AGENTS.md) for repository conventions.
-
-## Security
-
-Treat the management key as a secret. When **remember password** is enabled, it is persisted in browser storage using reversible obfuscation — **not encryption**.
-
-Use a trusted device or dedicated browser profile. Enable remote management only after evaluating the exposure of your server.
-
-## Troubleshooting
-
-<details>
-<summary><strong>Connection or authentication problems</strong></summary>
-
-- **Cannot connect / 401:** check the API address and management key. Remote connections may require remote management to be enabled.
-- **Repeated authentication failures:** the server may temporarily block remote IPs.
-
-</details>
-
-<details>
-<summary><strong>Missing pages, unsupported features, or failed tests</strong></summary>
-
-- **Logs page missing:** enable “Logging to file” in Basic Settings.
-- **Feature unsupported:** check the backend version and whether the relevant endpoint is enabled. Some capabilities depend on backend support.
-- **Model list unavailable:** querying `/v1/models` requires at least one proxy API key.
-- **OpenAI provider test fails:** this test runs in the browser and depends on the provider's network reachability and CORS policy. Failure does not necessarily mean the backend cannot reach it.
-
-</details>
+| 位置 | 改动 |
+|---|---|
+| `index.html`、`src/main.tsx`、`src/pages/LoginPage.tsx`、`src/pages/login/DotMatrixHero.tsx` | 品牌名改为 CPA |
+| `src/components/layout/MainLayout.tsx` | 隐藏 3 个菜单、新增「系统参数」菜单 |
+| `src/pages/SystemPage.tsx` | 「中心信息」改为「模型信息」 |
+| `src/router/MainRoutes.tsx` | 新增系统参数路由 |
+| `src/services/api/oauth.ts`、`src/features/oauth/*` | OAuth 会话代理、出口检测 |
+| `src/features/authFiles/hooks/useAuthFilesPrefixProxyEditor.ts` | 保存代理前做出口检测 |
+| `src/i18n/locales/*` | 追加 7 种语言文案 |
+| `tests/*` | OAuth 请求方式由 GET 改为 POST 的断言、品牌名断言 |
 
 ---
 
-<div align="center">
+## 安装
 
-[CLI Proxy API](https://github.com/router-for-me/CLIProxyAPI) · [Report an issue](https://github.com/router-for-me/Cli-Proxy-API-Management-Center/issues) · [MIT License](LICENSE)
+### Mac mini（推荐用发布包）
 
-</div>
+从 [Releases](https://github.com/fylsan3/Cli-Proxy-API-Management-Center/releases) 下载 `cpa-macmini-<版本>.tar.gz`：
+
+```bash
+tar xzf cpa-macmini-<版本>.tar.gz && cd cpa-macmini
+./install.sh --panel-only   # 只换面板（推荐，不重启，不影响正在跑的请求）
+./install.sh                # 没装过：全新安装；装过：升级程序 + 面板
+./install.sh --check        # 检查服务状态和「关闭面板自动更新」是否已设置
+./install.sh --rollback     # 回滚到上一次升级前
+```
+
+换完面板后浏览器按 **Cmd+Shift+R** 强制刷新。脚本不会修改已有的 config.yaml。
+
+### 手动安装
+
+**第 1 步：关闭面板自动更新（必须）**。否则 CPA 会定期下载官方面板覆盖二开面板。在 `config.yaml` 的 `management:` 下加：
+
+```yaml
+management:
+  disable-auto-update-panel: true
+```
+
+改完重启 CPA。
+
+**第 2 步：构建并替换**
+
+```bash
+git clone https://github.com/fylsan3/Cli-Proxy-API-Management-Center.git cpa-panel
+cd cpa-panel && git switch feat/oauth-proxy-url
+bun install && bun run build                   # 产物：dist/index.html
+cp <CPA目录>/static/management.html <CPA目录>/static/management.html.bak
+cp dist/index.html <CPA目录>/static/management.html
+```
+
+回滚：把 `management.html.bak` 复制回去即可。
+
+### 说明
+
+- 关闭自动更新后面板不会自己升级，官方出新版时需同步上游后重新构建。
+- 许可证沿用上游 MIT，见 [LICENSE](./LICENSE)。
