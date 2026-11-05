@@ -92,6 +92,8 @@ management:
 
 **第 2 步：构建并替换**
 
+需要 **Bun 1.4.3**（与 `package.json` 中 `packageManager` 一致）。
+
 ```bash
 git clone https://github.com/fylsan3/Cli-Proxy-API-Management-Center.git cpa-panel
 cd cpa-panel && git switch feat/oauth-proxy-url

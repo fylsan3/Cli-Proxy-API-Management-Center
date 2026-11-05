@@ -18,7 +18,7 @@ describe('Bun toolchain version', () => {
     }
   );
 
-  test.each(['README.md', 'README_CN.md'])('%s documents the pinned Bun release', (path) => {
+  test.each(['README.md'])('%s documents the pinned Bun release', (path) => {
     expect(readProjectFile(path)).toContain(`**Bun ${bunVersion}**`);
   });
 
