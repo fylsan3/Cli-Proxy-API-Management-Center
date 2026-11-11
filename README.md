@@ -1,11 +1,11 @@
 # CPA 管理面板 二开版
 
 基于官方 [Cli-Proxy-API-Management-Center](https://github.com/router-for-me/Cli-Proxy-API-Management-Center) **v1.27.3** 二次开发，分支 `feat/oauth-proxy-url`。
-配套后端：官方 CLIProxyAPI **v8.0.51**（程序原样未改，只换管理面板）。
+配套后端：官方 CLIProxyAPI **v8.0.64**（程序原样未改，只换管理面板）。
 
 原则：**只新增、不改原功能**。官方功能和用法不变，官方文档请看上游仓库。
 
-- 最新版本：[v8.0.51-panel.f14da5c](https://github.com/fylsan3/Cli-Proxy-API-Management-Center/releases/tag/v8.0.51-panel.f14da5c)
+- 最新版本：[v8.0.64-panel.4aa3a52](https://github.com/fylsan3/Cli-Proxy-API-Management-Center/releases/tag/v8.0.64-panel.4aa3a52)
 - 详细技术说明：[CHANGES-CPA.md](./CHANGES-CPA.md)
 
 ---
