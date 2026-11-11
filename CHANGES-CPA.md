@@ -1,6 +1,6 @@
 # CPA 面板二开说明
 
-本分支 `feat/oauth-proxy-url` 基于官方 [Cli-Proxy-API-Management-Center](https://github.com/router-for-me/Cli-Proxy-API-Management-Center) `v1.27.2`（`f154fa9`）修改。
+本分支 `feat/oauth-proxy-url` 基于官方 [Cli-Proxy-API-Management-Center](https://github.com/router-for-me/Cli-Proxy-API-Management-Center) `v1.27.3`（`953fb24`）修改（2026-11-11 由 v1.27.2 合并升级，无冲突）。
 以下是全部改动，以及安装时必须做的一步：**关闭面板自动更新**。
 
 ---
