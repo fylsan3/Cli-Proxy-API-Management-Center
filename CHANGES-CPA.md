@@ -144,6 +144,13 @@ const HIDE_NAV_ITEMS = { quickStart: true, plugins: true, pluginStore: true } as
 
 - 分组标题由「A 组 / B 组 / C 组」改为「推荐 / 可选 / 安全检查」（7 种语言，英文 Recommended / Optional / Safety checks），上文所说 A / B / C 组即对应这三组。
 
+### 8. Mac 启动 / 停止 / 重启脚本（2026-11-11 新增，纯新增目录，不影响面板代码）
+
+- 新增 `deploy/macos/`：`cpactl.sh`（`start | stop [--all] | restart | status | logs | disable`）、快捷脚本 `start.sh / stop.sh / restart.sh / status.sh`、launchd 模板 `templates/com.local.cliproxyapi.plist`。
+- 基于 launchd 后台运行：关掉终端不停、崩溃自动拉起、登录后自动启动；不修改 `config.yaml`。
+- 用 `lsof` 按端口识别「终端里前台跑的 CPA」：`start` 遇到会拒绝并提示，`stop --all` 会发 SIGTERM 正常关闭。
+- 发布包 `cpa-macmini-*.tar.gz` 同步包含这些脚本。用法见 [deploy/macos/README.md](./deploy/macos/README.md)。
+
 ---
 
 ## 二、安装

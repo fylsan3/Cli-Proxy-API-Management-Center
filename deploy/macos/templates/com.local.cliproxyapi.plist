@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.local.cliproxyapi</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>__CPA_HOME__/bin/cli-proxy-api</string>
+        <string>-config</string>
+        <string>__CPA_HOME__/config.yaml</string>
+    </array>
+    <key>WorkingDirectory</key>
+    <string>__CPA_HOME__</string>
+    <key>RunAtLoad</key>
+    <true/>
+    <key>KeepAlive</key>
+    <true/>
+    <key>StandardOutPath</key>
+    <string>__CPA_HOME__/logs/out.log</string>
+    <key>StandardErrorPath</key>
+    <string>__CPA_HOME__/logs/err.log</string>
+    <key>ProcessType</key>
+    <string>Interactive</string>
+</dict>
+</plist>

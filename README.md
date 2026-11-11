@@ -79,6 +79,17 @@ tar xzf cpa-macmini-<版本>.tar.gz && cd cpa-macmini
 
 换完面板后浏览器按 **Cmd+Shift+R** 强制刷新。脚本不会修改已有的 config.yaml。
 
+**启动 / 停止 / 重启**（后台运行，关掉终端也不停，崩溃自动拉起，登录后自动启动）：
+
+```bash
+./start.sh          # 启动
+./stop.sh           # 停止（--all 连终端前台跑的也关掉）
+./restart.sh        # 重启
+./status.sh         # 状态
+```
+
+源码在 [deploy/macos/](./deploy/macos/)，含「终端前台运行换成后台」的步骤。
+
 ### 手动安装
 
 **第 1 步：关闭面板自动更新（必须）**。否则 CPA 会定期下载官方面板覆盖二开面板。在 `config.yaml` 的 `management:` 下加：
